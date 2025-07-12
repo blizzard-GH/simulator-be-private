@@ -1,0 +1,30 @@
+# app/__init__.py
+
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from config import Config
+from flask_cors import CORS
+
+db = SQLAlchemy()
+
+from app.routes.user_routes import user_bp
+from app.routes.returnsheet_grid_routes import returnsheet_grid_bp
+
+def create_app():
+    app = Flask(__name__)
+    app.config.from_object(Config)
+
+    db.init_app(app)
+
+    # Allow all origins (for dev only)
+    CORS(app)
+
+    # from .routes.user_routes import user_bp
+    # app.register_blueprint(user_bp, url_prefix="/api/users")
+    app.register_blueprint(user_bp)
+    app.register_blueprint(returnsheet_grid_bp)
+
+    with app.app_context():
+        db.create_all()
+
+    return app
