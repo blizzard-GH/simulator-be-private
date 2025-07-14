@@ -1,5 +1,5 @@
 from ..model.tbl_user import TblUser
-from .. import db
+# from .. import db
 from flask import abort
 from ..utils.serializer import model_to_dict, models_to_list
 

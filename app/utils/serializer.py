@@ -1,4 +1,6 @@
+from flask import json
 from sqlalchemy.orm import DeclarativeMeta
+from sqlalchemy.dialects.mysql import LONGTEXT
 
 def model_to_dict(instance, include_relationships=False):
     """
@@ -16,7 +18,18 @@ def model_to_dict(instance, include_relationships=False):
 
     result = {}
     for column in instance.__table__.columns:
-        result[column.name] = getattr(instance, column.name)
+        # result[column.name] = getattr(instance, column.name)
+        value = getattr(instance, column.name)
+
+        # Automatically parse LONGTEXT fields if possible
+        if isinstance(column.type, LONGTEXT):
+            try:
+                value = json.loads(value) if value else None
+            except (ValueError, TypeError):
+                # Fall back to original value if not valid JSON
+                pass
+
+        result[column.name] = value
 
     # Optionally include @relationship fields
     if include_relationships:

@@ -9,6 +9,7 @@ db = SQLAlchemy()
 
 from app.routes.user_routes import user_bp
 from app.routes.returnsheet_grid_routes import returnsheet_grid_bp
+from app.routes.returnsheet_form_data_routes import returnsheet_form_data_bp
 
 def create_app():
     app = Flask(__name__)
@@ -23,6 +24,7 @@ def create_app():
     # app.register_blueprint(user_bp, url_prefix="/api/users")
     app.register_blueprint(user_bp)
     app.register_blueprint(returnsheet_grid_bp)
+    app.register_blueprint(returnsheet_form_data_bp)
 
     with app.app_context():
         db.create_all()
