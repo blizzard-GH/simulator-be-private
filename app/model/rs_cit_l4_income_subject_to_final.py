@@ -1,28 +1,35 @@
-from sqlalchemy import Column, DECIMAL, MetaData, String, Table, text
+from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.mysql import TIMESTAMP
+from sqlalchemy import String, DECIMAL, text
+from app import db
 
-metadata = MetaData()
+class RSCITL4IncomeSubjectToFinal(db.Model):
+    __tablename__ = 'RS_CIT_L4_INCOME_SUBJECT_TO_FINAL'
 
-
-t_RS_CIT_L4_INCOME_SUBJECT_TO_FINAL = Table(
-    'RS_CIT_L4_INCOME_SUBJECT_TO_FINAL', metadata,
-    Column('Z_RECORD_ID', String(55)),
-    Column('Z_RETURN_SHEET_RECORD_ID', String(55)),
-    Column('Z_TAX_OBJECT_CODE', String(3000)),
-    Column('Z_TAX_OBJECT', String(3000)),
-    Column('Z_TAX_BASE', DECIMAL(38, 8)),
-    Column('Z_TAX_RATE', DECIMAL(38, 8)),
-    Column('Z_INCOME_TAX', DECIMAL(38, 8)),
-    Column('Z_INCOME_TAX_USD', DECIMAL(38, 8)),
-    Column('Z_IS_DELETED', DECIMAL(1, 0), server_default=text('0')),
-    Column('Z_IS_MANUALLY', DECIMAL(1, 0), server_default=text('0')),
-    Column('Z_WITHHOLDINGSLIPS_AGGREGATE_IDENTIFIER', String(55)),
-    Column('Z_TABLE_SOURCE', String(2000)),
-    Column('Z_LAST_UPDATED_DATE', TIMESTAMP(fsp=6), nullable=False, server_default=text('current_timestamp(6) ON UPDATE current_timestamp(6)')),
-    Column('Z_CREATION_DATE', TIMESTAMP(fsp=6), nullable=False, server_default=text('current_timestamp(6)')),
-    Column('Z_IS_MIGRATED', DECIMAL(1, 0), server_default=text('0')),
-    Column('Z_IS_MIGRATED_AND_UPDATED', DECIMAL(1, 0), server_default=text('0')),
-    Column('Z_TIN', String(250)),
-    Column('Z_NAME', String(250)),
-    Column('Z_TAX_BASE_USD', DECIMAL(38, 8))
-)
+    z_record_id = db.Column(String(55), primary_key=True)
+    z_return_sheet_record_id = db.Column(String(55))
+    z_tax_object_code = db.Column(String(3000))
+    z_tax_object = db.Column(String(3000))
+    z_tax_base = db.Column(DECIMAL(38, 8))
+    z_tax_rate = db.Column(DECIMAL(38, 8))
+    z_income_tax = db.Column(DECIMAL(38, 8))
+    z_income_tax_usd = db.Column(DECIMAL(38, 8))
+    z_is_deleted = db.Column(DECIMAL(1, 0), server_default=text('0'))
+    z_is_manually = db.Column(DECIMAL(1, 0), server_default=text('0'))
+    z_withholdingslips_aggregate_identifier = db.Column(String(55))
+    z_table_source = db.Column(String(2000))
+    z_last_updated_date = db.Column(
+        TIMESTAMP(fsp=6),
+        nullable=False,
+        server_default=text('current_timestamp(6) ON UPDATE current_timestamp(6)')
+    )
+    z_creation_date = db.Column(
+        TIMESTAMP(fsp=6),
+        nullable=False,
+        server_default=text('current_timestamp(6)')
+    )
+    z_is_migrated = db.Column(DECIMAL(1, 0), server_default=text('0'))
+    z_is_migrated_and_updated = db.Column(DECIMAL(1, 0), server_default=text('0'))
+    z_tin = db.Column(String(250))
+    z_name = db.Column(String(250))
+    z_tax_base_usd = db.Column(DECIMAL(38, 8))
