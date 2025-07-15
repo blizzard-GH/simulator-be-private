@@ -1,3 +1,4 @@
+import json
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.mysql import LONGTEXT, TIMESTAMP
 from sqlalchemy import text, DECIMAL, String
@@ -23,3 +24,10 @@ class RSReturnsheetFormData(db.Model):
         nullable=False,
         server_default=text('current_timestamp(6)')
     )
+
+    def get_main_form_data(self):
+        try:
+            data = json.loads(self.z_form_data or '{}')
+            return data.get('MainFormData', {})
+        except json.JSONDecodeError:
+            return {}
