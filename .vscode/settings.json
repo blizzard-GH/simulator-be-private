@@ -1,5 +1,8 @@
 {
     "python.analysis.extraPaths": [
         "./app/utils"
-    ]
+    ],
+    "files.exclude": {
+        "**/__pycache__": true
+    }
 }
