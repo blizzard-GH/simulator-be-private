@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, request
 
 from ..service.returnsheet_grid_service import get_all_returnsheet_grid_service
 
-returnsheet_grid_bp = Blueprint("returnsheetgrid", __name__, url_prefix="/api/returnsheetgrid")
+returnsheet_grid_bp = Blueprint("returnsheetGridBlueprint", __name__, url_prefix="/api/returnsheetgrid")
 
 @returnsheet_grid_bp.route("/getallreturnsheetgrid", methods=["GET"])
 def get_returnsheet_grid_route():

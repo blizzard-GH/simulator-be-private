@@ -66,3 +66,13 @@ def models_to_list(instances, include_relationships=False):
     Convert a list of model instances to list of dicts.
     """
     return [model_to_dict(i, include_relationships) for i in instances]
+
+
+def serialize_model_or_list(instances, include_relationships=False):
+    if instances is None:
+        return None
+    elif isinstance(instances, (list, tuple)):
+        return [model_to_dict(i, include_relationships) for i in instances]
+    else:
+        return model_to_dict(instances, include_relationships)
+
