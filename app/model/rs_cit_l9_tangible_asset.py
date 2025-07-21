@@ -6,7 +6,7 @@ from app import db
 class RSCITL9TangibleAsset(db.Model):
     __tablename__ = 'RS_CIT_L9_TANGIBLE_ASSET'
 
-    z_record_id = db.Column(String(55))
+    z_record_id = db.Column(String(55), primary_key=True)
     z_return_sheet_record_id = db.Column(String(55))
     z_group_type = db.Column(String(3000))
     z_group_asset_type = db.Column(String(3000))
