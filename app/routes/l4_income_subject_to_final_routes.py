@@ -1,10 +1,12 @@
 from flask import Blueprint, jsonify, request
+from flask_jwt_extended import jwt_required
 
 from app.service.l4_income_subject_to_final_service import get_l4_income_subject_to_final_by_returnsheet_record_id_service
 
 l4_income_subject_to_final_bp = Blueprint("l4IncomeSubjectToFinal", __name__, url_prefix="/api/l4incomesubjecttofinal")
 
 @l4_income_subject_to_final_bp.route("/getl4incometsubjecttofinalbyreturnsheetrecordid/<string:recordid>", methods=["GET"])
+@jwt_required()
 def get_l4_income_subject_to_final_by_returnsheet_record_id_routes(recordid):
     l4IncomeSubjectToFinal = get_l4_income_subject_to_final_by_returnsheet_record_id_service(recordid)
 

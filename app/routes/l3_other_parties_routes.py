@@ -1,10 +1,12 @@
 from flask import Blueprint, jsonify, request
+from flask_jwt_extended import jwt_required
 
 from app.service.l3_other_parties_service import get_l3_other_parties_by_returnsheet_record_id_service
 
 l3_other_parties_bp = Blueprint("l3OtherPartiesBlueprint", __name__, url_prefix="/api/l3otherparties")
 
 @l3_other_parties_bp.route("/getl3otherpartiesbyreturnsheetrecordid/<string:recordid>", methods=["GET"])
+@jwt_required()
 def get_l3_other_parties_by_returnsheet_record_id_routes(recordid):
     l3OtherParties = get_l3_other_parties_by_returnsheet_record_id_service(recordid)
 
