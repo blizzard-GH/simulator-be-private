@@ -18,18 +18,22 @@ def model_to_dict(instance, include_relationships=False):
 
     result = {}
     for column in instance.__table__.columns:
-        # result[column.name] = getattr(instance, column.name)
-        value = getattr(instance, column.name)
+        try:
+            # result[column.name] = getattr(instance, column.name)
+            value = getattr(instance, column.name)
 
-        # Automatically parse LONGTEXT fields if possible
-        if isinstance(column.type, LONGTEXT):
-            try:
-                value = json.loads(value) if value else None
-            except (ValueError, TypeError):
-                # Fall back to original value if not valid JSON
-                pass
+            # Automatically parse LONGTEXT fields if possible
+            if isinstance(column.type, LONGTEXT):
+                try:
+                    value = json.loads(value) if value else None
+                except (ValueError, TypeError):
+                    # Fall back to original value if not valid JSON
+                    pass
 
-        result[column.name] = value
+            result[column.name] = value
+        except AttributeError:
+            # Skip unreadable fields (e.g., write-only properties like PASSWORD)
+            continue
 
     # Optionally include @relationship fields
     if include_relationships:
