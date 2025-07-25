@@ -16,7 +16,8 @@ def login():
             "role": user.ROLE,
             "tin": user.TIN,
             "name": user.NAME,
-            "last_login_date":user.LAST_LOGIN_DATE
+            "last_login_date": user.LAST_LOGIN_DATE,
+            "z_taxpayer_aggregate_identifier": user.Z_TAXPAYER_AGGREGATE_IDENTIFIER
         }
 
         # Generate and return JWT token
@@ -49,7 +50,8 @@ def switch_identity():
             "role": impersonate_user.ROLE,
             "tin": impersonate_user.TIN,
             "name": impersonate_user.NAME,
-            "last_login_date":impersonate_user.LAST_LOGIN_DATE
+            "last_login_date": impersonate_user.LAST_LOGIN_DATE,
+            "z_taxpayer_aggregate_identifier": impersonate_user.Z_TAXPAYER_AGGREGATE_IDENTIFIER
         }
 
     # ✅ Create new token with new sub

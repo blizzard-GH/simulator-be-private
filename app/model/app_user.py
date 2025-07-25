@@ -20,6 +20,7 @@ class APPUSER(db.Model):
     PASSWORD_HASH = db.Column("PASSWORD", db.String(255), nullable=True, comment='Password hash')
     PASSPHRASE_HASH = db.Column("PASSPHRASE", db.String(255), nullable=True, comment='Passphrase hash')
     ROLE = db.Column(DECIMAL(2, 0), server_default=text('0'), comment='Role User')
+    Z_TAXPAYER_AGGREGATE_IDENTIFIER = db.Column(db.String(55))
 
     @property
     def password(self):
