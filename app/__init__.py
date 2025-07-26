@@ -26,7 +26,12 @@ def create_app():
 
     db.init_app(app)
     jwt.init_app(app)
-    cors.init_app(app)
+    cors.init_app(app,
+              supports_credentials=True,
+              origins=['http://127.0.0.1:4200'],
+              resources={r"/api/*": {"origins": "http://127.0.0.1:4200"}})
+    
+    # init_cors(app)
 
     # Allow all origins (for dev only)
     # CORS(app)
