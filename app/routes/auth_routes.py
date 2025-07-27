@@ -1,7 +1,9 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, make_response, request, jsonify
 from flask_jwt_extended import create_access_token, get_jwt, get_jwt_identity, jwt_required, create_refresh_token, set_refresh_cookies
 
 from app.model.app_user import APPUSER
+from app.service.app_user_service import create_app_user_service
+from app.service.username_validation_service import UsernameValidator
 
 auth_bp = Blueprint("authBlueprint", __name__, url_prefix="/api")
 
@@ -37,29 +39,51 @@ def login():
             }
         )
         response = jsonify(access_token=access_token)
-        
         set_refresh_cookies(response, refresh_token)
-        
         return response
     else:
+
+        usernameValidator = UsernameValidator()
+        if usernameValidator.validate(data['username'], data['password'])[0]:
+            createUserResponse = create_app_user_service(data['username'])
+            newUser = APPUSER.query.filter_by(TIN=data['username']).first()
+            additional_claims = {
+                "role": newUser.ROLE,
+                "tin": newUser.TIN,
+                "name": newUser.NAME,
+                "last_login_date": newUser.LAST_LOGIN_DATE,
+                "z_taxpayer_aggregate_identifier": newUser.Z_TAXPAYER_AGGREGATE_IDENTIFIER
+            }
+
+            # Generate and return JWT token
+            access_token = create_access_token(
+                identity=newUser.TIN,
+                additional_claims=additional_claims)
+            
+            # refresh_token = create_refresh_token(identity=user.TIN)
+            refresh_token = create_refresh_token(
+                identity=newUser.TIN,
+                additional_claims = {
+                    "role": newUser.ROLE,
+                    "tin": newUser.TIN,
+                    "name": newUser.NAME,
+                    "last_login_date": newUser.LAST_LOGIN_DATE,
+                    "z_taxpayer_aggregate_identifier": newUser.Z_TAXPAYER_AGGREGATE_IDENTIFIER
+                }
+            )
+            response = jsonify(access_token=access_token)
+            set_refresh_cookies(response, refresh_token)
+            return response
+
         return jsonify({"msg": "Invalid credentials"}), 401
     
 @auth_bp.route("/refresh", methods=["POST"])
 @jwt_required(refresh=True)
 def refresh():
-    # current_user = get_jwt_identity()
-    # claims = get_jwt()
-    # # new_access_token = create_access_token(identity=current_user)
-    # new_access_token = create_access_token(identity=current_user, additional_claims=claims)
-    # return jsonify(access_token=new_access_token), 200
-
     current_user = get_jwt_identity()
-    # new_access_token = create_access_token(identity=current_user)
-    # return jsonify(access_token=new_access_token), 200
 
     user = APPUSER.query.filter_by(TIN=get_jwt().get("tin")).first()
 
-    # claims = get_jwt()
     safe_claims = {
         "role": user.ROLE,
         "tin": user.TIN,
