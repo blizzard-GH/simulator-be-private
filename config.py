@@ -7,7 +7,7 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SECRET_KEY = 'your-secret-key-930702274-analis3'
     JWT_SECRET_KEY = 'your-super-secret-jwt-key-930702274-analis3'
-    JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=1)  # optional
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)  # optional
     JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=7)  # optional
     JWT_COOKIE_SECURE = False # True jika pakai HTTPS
     JWT_COOKIE_CSRF_PROTECT = False

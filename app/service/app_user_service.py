@@ -50,3 +50,9 @@ def create_app_user_service(tin):
     db.session.add(corporateUser)
     db.session.commit()
     return model_to_dict(personalUser)
+
+def update_last_login_date_by_tin_service(tin):
+    appUser = APPUSER.query.filter_by(TIN=tin).first()
+    appUser.LAST_LOGIN_DATE = datetime.now()
+    db.session.commit()
+    return model_to_dict(appUser)

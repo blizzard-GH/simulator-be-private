@@ -22,10 +22,27 @@ class UsernameValidator:
         currentReferenceData = get_current_reference_data_by_reference_data_type_and_code_service('DISTRICT', prefix)
         if not currentReferenceData:
             return False, f"Username prefix {prefix} is not valid"
+        
+        # if character at index 7 is greater than 3, then subtract 4 from the value of character at index 6
+        if int(username[6]) > 3:
+            updated_value = str(int(username[6]) - 4)
+            username = username[:6] + updated_value + username[7:]
 
-        #validate if characters 6 until 12 compare to today is more than 17 years 0 month 0 day 3275111806870008
+        #validate if characters 7 until 12 compare to today is more than 17 years 0 month 0 day 3275111806870008
         today = datetime.today()
-        birth_date = datetime(int(username[11:12]), int(username[9:10]), int(username[7:8]))
+
+        day = int(username[6:8])
+        month = int(username[8:10])
+        year = int(username[10:12])
+
+        # Koreksi tahun 2-digit ke 4-digit
+        if year >= 0 and year <= datetime.now().year % 100:
+            year += 2000
+        else:
+            year += 1900
+
+        birth_date = datetime(year, month, day)
+        # birth_date = datetime(int(username[10:12]), int(username[8:10]), int(username[6:8]))
         age = today - birth_date
         if age.days > 17 * 365.25 * 24 * 60 * 60:
             return False, "Age must be at least 17 years old"
