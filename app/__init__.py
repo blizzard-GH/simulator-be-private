@@ -31,6 +31,12 @@ def create_app():
               supports_credentials=True,
               origins=['http://127.0.0.1:4200'],
               resources={r"/api/*": {"origins": "http://127.0.0.1:4200"}})
+
+    # for docker
+    # cors.init_app(app,
+    #           supports_credentials=True,
+    #           origins=['http://127.0.0.1:4242'],
+    #           resources={r"/api/*": {"origins": "http://127.0.0.1:4242"}})
     
     # init_cors(app)
 
