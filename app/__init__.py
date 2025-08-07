@@ -3,7 +3,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from config import Config
-# from flask_cors import CORS
+from flask_cors import CORS
 from .extensions import jwt, cors
 
 
@@ -26,11 +26,16 @@ def create_app():
 
     db.init_app(app)
     jwt.init_app(app)
+    origins = app.config['CORS_ORIGINS']
+    if isinstance(origins, str):
+        origins = [o.strip() for o in origins.split(',')]
+
+    CORS(app, origins=origins, supports_credentials=True)
     # cors.init_app(app, supports_credentials=True, origins=["http://127.0.0.1:4200"])
-    cors.init_app(app,
-              supports_credentials=True,
-              origins=['http://127.0.0.1:4200'],
-              resources={r"/api/*": {"origins": "http://127.0.0.1:4200"}})
+    # cors.init_app(app,
+    #           supports_credentials=True,
+    #           origins=['http://127.0.0.1:4200'],
+    #           resources={r"/api/*": {"origins": "http://127.0.0.1:4200"}})
 
     # for docker
     # cors.init_app(app,
