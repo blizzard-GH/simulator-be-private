@@ -3,8 +3,14 @@ from datetime import timedelta
 import os
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
-load_dotenv()
+# Load environment-specific .env file
+# Check if FLASK_ENV is already set (e.g., by Docker)
+flask_env = os.getenv('FLASK_ENV', 'development')
+
+if flask_env == 'production':
+    load_dotenv('.env.production')
+else:
+    load_dotenv('.env.development')
 
 class Config:
     # SQLALCHEMY_DATABASE_URI = "sqlite:///app.db"  # change to MySQL if needed
@@ -26,9 +32,5 @@ class Config:
     JWT_ACCESS_COOKIE_NAME = 'access_token'     # ini tidak akan dipakai karena access_token dari header
     JWT_REFRESH_COOKIE_NAME = 'refresh_token'
     
-    # Set CORS origins based on environment
-    # Local development: port 4200, Docker production: port 4242
-    if os.getenv('FLASK_ENV') == 'production':
-        CORS_ORIGINS = os.getenv('CORS_ORIGINS', 'http://localhost:4242,http://127.0.0.1:4242')
-    else:
-        CORS_ORIGINS = os.getenv('CORS_ORIGINS', 'http://localhost:4200,http://127.0.0.1:4200')
+    # CORS origins are now loaded directly from the environment-specific .env file
+    CORS_ORIGINS = os.getenv('CORS_ORIGINS', '*')
