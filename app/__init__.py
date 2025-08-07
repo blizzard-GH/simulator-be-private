@@ -38,14 +38,6 @@ def create_app():
     #           origins=['http://127.0.0.1:4242'],
     #           resources={r"/api/*": {"origins": "http://127.0.0.1:4242"}})
     
-    # init_cors(app)
-
-    # Allow all origins (for dev only)
-    # CORS(app)
-
-    # from .routes.user_routes import user_bp
-    # app.register_blueprint(user_bp, url_prefix="/api/users")
-    # app.register_blueprint(user_test_bp)
     app.register_blueprint(returnsheet_grid_bp)
     app.register_blueprint(returnsheet_form_data_bp)
     app.register_blueprint(l3_other_parties_bp)
