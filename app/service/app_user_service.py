@@ -56,3 +56,10 @@ def update_last_login_date_by_tin_service(tin):
     appUser.LAST_LOGIN_DATE = datetime.now()
     db.session.commit()
     return model_to_dict(appUser)
+
+def check_passphrase_service(tin, passphrase):
+    appUser = APPUSER.query.filter_by(TIN=tin).first()
+    if not appUser:
+        abort(404, description=f"User with TIN {tin} not found")
+    return appUser.check_passphrase(passphrase)
+    
