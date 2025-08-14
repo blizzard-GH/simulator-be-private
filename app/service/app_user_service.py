@@ -1,5 +1,7 @@
 from datetime import datetime
 import uuid
+
+from sqlalchemy import null
 from ..model.app_user import APPUSER
 from flask import abort
 from ..utils.serializer import model_to_dict
@@ -28,11 +30,11 @@ def create_app_user_service(tin):
         password="Pajak@123",
         passphrase="Pajak@123",
         IS_CORPORATE=0,
-        TIN_PERSONAL=tin,
-        CREATION_DATE=datetime.now(),
-        LAST_LOGIN_DATE=datetime.now(),
+        # TIN_PERSONAL=null,
+        # CREATION_DATE=datetime.now(),
+        # LAST_LOGIN_DATE=datetime.now(),
         ROLE=0,
-        Z_TAXPAYER_AGGREGATE_IDENTIFIER=str(uuid.uuid4())
+        # Z_TAXPAYER_AGGREGATE_IDENTIFIER=str(uuid.uuid4())
     )
     corporateUser = APPUSER(
         TIN="0" + tin[1:],
@@ -41,10 +43,10 @@ def create_app_user_service(tin):
         passphrase="Pajak@123",
         IS_CORPORATE=1,
         TIN_PERSONAL=tin,
-        CREATION_DATE=datetime.now(),
-        LAST_LOGIN_DATE=datetime.now(),
+        # CREATION_DATE=datetime.now(),
+        # LAST_LOGIN_DATE=datetime.now(),
         ROLE=1,
-        Z_TAXPAYER_AGGREGATE_IDENTIFIER=str(uuid.uuid4())
+        # Z_TAXPAYER_AGGREGATE_IDENTIFIER=str(uuid.uuid4())
     )
     db.session.add(personalUser)
     db.session.add(corporateUser)
