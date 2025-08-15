@@ -18,7 +18,7 @@ def token_setter(user, identity):
     )
     
     refresh_token = create_refresh_token(
-        identity=user.TIN,
+        identity=identity,
         additional_claims=additional_claims
     )
 

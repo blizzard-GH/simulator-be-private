@@ -2,6 +2,14 @@ from ..model.rs_returnsheet_grid import RSReturnsheetGrid
 from ..utils.serializer import model_to_dict, models_to_list,serialize_model_or_list
 from sqlalchemy import desc
 
+def get_returnsheet_grid_by_record_id_service(recordId):
+    returnsheetGrid = RSReturnsheetGrid.query.filter_by(Z_RECORD_ID=recordId).first()
+
+    if not returnsheetGrid:
+        abort(404, description=f"Returnsheet Grid with Record ID {recordId} not found")
+
+    return model_to_dict(returnsheetGrid)
+
 def get_all_returnsheet_grid_service(limit=20):
     returnsheetGrid = RSReturnsheetGrid.query.order_by(desc(RSReturnsheetGrid.Z_CREATION_DATE)).limit(limit).all()
     return models_to_list(returnsheetGrid)

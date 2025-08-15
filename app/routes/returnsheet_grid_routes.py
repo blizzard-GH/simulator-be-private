@@ -1,9 +1,21 @@
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import get_jwt, jwt_required
 
-from ..service.returnsheet_grid_service import get_all_returnsheet_grid_service,get_not_submitted_returnsheet_grid_by_tai_service,get_submitted_returnsheet_grid_by_tai_service,get_waiting_for_payment_returnsheet_grid_by_tai_service,get_canceled_returnsheet_grid_by_tai_service,get_rejected_returnsheet_grid_by_tai_service
+from ..service.returnsheet_grid_service import get_all_returnsheet_grid_service,get_not_submitted_returnsheet_grid_by_tai_service,get_submitted_returnsheet_grid_by_tai_service,get_waiting_for_payment_returnsheet_grid_by_tai_service,get_canceled_returnsheet_grid_by_tai_service,get_rejected_returnsheet_grid_by_tai_service,get_returnsheet_grid_by_record_id_service
 
 returnsheet_grid_bp = Blueprint("returnsheetGridBlueprint", __name__, url_prefix="/api/returnsheetgrid")
+
+@returnsheet_grid_bp.route("/getreturnsheetgridbyrecordid/<string:recordid>", methods=["GET"])
+@jwt_required()
+def get_returnsheet_grid_by_record_id_route(recordid):
+    returnsheetGrid = get_returnsheet_grid_by_record_id_service(recordid)
+
+    response = {
+        "status": 200,
+        "message": "data found" if returnsheetGrid else "no data found",
+        "data": returnsheetGrid
+    }
+    return jsonify(response), 200
 
 @returnsheet_grid_bp.route("/getallreturnsheetgrid", methods=["GET"])
 @jwt_required()
