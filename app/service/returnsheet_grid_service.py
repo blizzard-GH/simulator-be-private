@@ -1,12 +1,21 @@
 from ..model.rs_returnsheet_grid import RSReturnsheetGrid
 from ..utils.serializer import model_to_dict, models_to_list,serialize_model_or_list
 from sqlalchemy import desc
+from flask import abort
 
-def get_returnsheet_grid_by_record_id_service(recordId):
-    returnsheetGrid = RSReturnsheetGrid.query.filter_by(Z_RECORD_ID=recordId).first()
+def get_returnsheet_grid_by_record_id_service(recordId, tai):
+    returnsheetGrid = RSReturnsheetGrid.query.filter_by(Z_RECORD_ID=recordId,Z_TAXPAYER_AGGREGATE_IDENTIFIER=tai).first()
 
     if not returnsheetGrid:
         abort(404, description=f"Returnsheet Grid with Record ID {recordId} not found")
+
+    return model_to_dict(returnsheetGrid)
+
+def check_returnsheet_grid_by_record_id_service(recordId, tai):
+    returnsheetGrid = RSReturnsheetGrid.query.filter_by(Z_RECORD_ID=recordId,Z_TAXPAYER_AGGREGATE_IDENTIFIER=tai).first()
+
+    if not returnsheetGrid:
+        abort(401, description=f"Returnsheet Grid with Record ID {recordId} not found")
 
     return model_to_dict(returnsheetGrid)
 

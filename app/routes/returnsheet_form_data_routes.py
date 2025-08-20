@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import get_jwt, jwt_required
 
 from app.service.returnsheet_form_data_service import get_returnsheet_form_data_by_record_id_service, get_returnsheet_main_form_data_by_record_id_service, get_returnsheet_form_data_by_aggregate_identifier_service, get_returnsheet_main_form_data_by_aggregate_identifier_service
 
@@ -8,7 +8,9 @@ returnsheet_form_data_bp = Blueprint("returnsheetFormDataBlueprint", __name__, u
 @returnsheet_form_data_bp.route("/getreturnsheetformdatabyrecordid/<string:recordid>", methods=["GET"])
 @jwt_required()
 def get_returnsheet_form_data_by_record_id_route(recordid):
-    returnsheetFormData = get_returnsheet_form_data_by_record_id_service(recordid)
+    claims = get_jwt()
+    tai = claims.get('z_taxpayer_aggregate_identifier')
+    returnsheetFormData = get_returnsheet_form_data_by_record_id_service(recordid, tai)
 
     response = {
         "status": 200,

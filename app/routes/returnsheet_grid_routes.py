@@ -8,7 +8,9 @@ returnsheet_grid_bp = Blueprint("returnsheetGridBlueprint", __name__, url_prefix
 @returnsheet_grid_bp.route("/getreturnsheetgridbyrecordid/<string:recordid>", methods=["GET"])
 @jwt_required()
 def get_returnsheet_grid_by_record_id_route(recordid):
-    returnsheetGrid = get_returnsheet_grid_by_record_id_service(recordid)
+    claims = get_jwt()
+    tai = claims.get('z_taxpayer_aggregate_identifier')
+    returnsheetGrid = get_returnsheet_grid_by_record_id_service(recordid, tai)
 
     response = {
         "status": 200,
