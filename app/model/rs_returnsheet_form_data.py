@@ -31,3 +31,24 @@ class RSReturnsheetFormData(db.Model):
             return data.get('MainFormData', {})
         except json.JSONDecodeError:
             return {}
+        
+    @property
+    def form_data(self):
+        return json.loads(self.z_form_data) if self.z_form_data else {}
+
+    @form_data.setter
+    def form_data(self, value):
+        self.z_form_data = json.dumps(value)
+
+    def get_main_form_value(self, key, default=None):
+        """Get a value from MainFormData safely"""
+        return self.form_data.get("MainFormData", {}).get(key, default)
+
+        
+    def set_main_form_value(self, key, value):
+        """Set a value inside MainFormData (create MainFormData if missing)"""
+        data = self.form_data
+        if "MainFormData" not in data:
+            data["MainFormData"] = {}
+        data["MainFormData"][key] = value
+        self.form_data = data

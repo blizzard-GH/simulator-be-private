@@ -54,6 +54,8 @@ class RSReturnsheetGrid(db.Model):
     Z_DOCUMENT_RECEIPT_AGGREGATE_IDENTIFIER = db.Column(db.String(16))
     Z_RETURN_SHEET_DECIMAL = db.Column(db.String(100))
     Z_SUBMIT_IN_PROGRESS_STATUS = db.Column(db.Numeric(1, 0), server_default=text('0'))
+    Z_TIN = db.Column(db.String(16))
+    Z_NAME = db.Column(db.String(255))
 
     # def to_dict(self):
     #     return {c.name: getattr(self, c.name) for c in self.__table__.columns}

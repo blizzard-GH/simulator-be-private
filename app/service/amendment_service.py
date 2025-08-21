@@ -123,7 +123,9 @@ def create_amendment_service(tai, taxType, taxReturnPeriodType, taxYear, taxRetu
             Z_DOCUMENT_RECEIPT_DECIMAL=last_spt["grid"].Z_DOCUMENT_RECEIPT_DECIMAL,
             Z_DOCUMENT_RECEIPT_AGGREGATE_IDENTIFIER=last_spt["grid"].Z_DOCUMENT_RECEIPT_AGGREGATE_IDENTIFIER,
             Z_RETURN_SHEET_DECIMAL=last_spt["grid"].Z_RETURN_SHEET_DECIMAL,
-            Z_SUBMIT_IN_PROGRESS_STATUS=last_spt["grid"].Z_SUBMIT_IN_PROGRESS_STATUS
+            Z_SUBMIT_IN_PROGRESS_STATUS=last_spt["grid"].Z_SUBMIT_IN_PROGRESS_STATUS,
+            Z_TIN=last_spt["grid"].Z_TIN,
+            Z_NAME=last_spt["grid"].Z_NAME
         )
         db.session.add(returnsheet_grid_new)
 
@@ -139,6 +141,11 @@ def create_amendment_service(tai, taxType, taxReturnPeriodType, taxYear, taxRetu
             z_is_migrated_and_updated=last_spt["form_data"].z_is_migrated_and_updated,
             z_creation_date=datetime.now()
         )
+        # set nilai UnderpaymentIncomeInAmended menjadi nilai dari spt sebelumnya
+        constIncomeTaxMustPaid = last_spt["form_data"].get_main_form_value("IncomeTaxMustPaid")
+        # returnsheet_form_data_new.set_main_form_value("IncomeTaxMustPaid",0)
+        returnsheet_form_data_new.set_main_form_value("UnderpaymentIncomeInAmended",constIncomeTaxMustPaid)
+
         db.session.add(returnsheet_form_data_new)
 
         if last_spt["l3_other_parties"]:
@@ -182,8 +189,8 @@ def create_amendment_service(tai, taxType, taxReturnPeriodType, taxYear, taxRetu
                     z_is_manually=l4IncomeSubjectToFinal.z_is_manually,
                     z_withholdingslips_aggregate_identifier=l4IncomeSubjectToFinal.z_withholdingslips_aggregate_identifier,
                     z_table_source=l4IncomeSubjectToFinal.z_table_source,
-                    z_last_updated_date=l4IncomeSubjectToFinal.z_last_updated_date,
-                    z_creation_date=l4IncomeSubjectToFinal.z_creation_date,
+                    z_last_updated_date=datetime.now(),
+                    z_creation_date=datetime.now(),
                     z_is_migrated=l4IncomeSubjectToFinal.z_is_migrated,
                     z_is_migrated_and_updated=l4IncomeSubjectToFinal.z_is_migrated_and_updated,
                     z_tin=l4IncomeSubjectToFinal.z_tin,
@@ -209,8 +216,8 @@ def create_amendment_service(tai, taxType, taxReturnPeriodType, taxYear, taxRetu
                     z_notes=l9TangibleAsset.z_notes,
                     z_is_deleted=l9TangibleAsset.z_is_deleted,
                     z_is_manually=l9TangibleAsset.z_is_manually,
-                    z_last_updated_date=l9TangibleAsset.z_last_updated_date,
-                    z_creation_date=l9TangibleAsset.z_creation_date,
+                    z_last_updated_date=datetime.now(),
+                    z_creation_date=datetime.now(),
                     z_is_migrated=l9TangibleAsset.z_is_migrated,
                     z_is_migrated_and_updated=l9TangibleAsset.z_is_migrated_and_updated
                 )
@@ -233,8 +240,8 @@ def create_amendment_service(tai, taxType, taxReturnPeriodType, taxYear, taxRetu
                     z_notes=l9GroupOfBuilding.z_notes,
                     z_is_deleted=l9GroupOfBuilding.z_is_deleted,
                     z_is_manually=l9GroupOfBuilding.z_is_manually,
-                    z_last_updated_date=l9GroupOfBuilding.z_last_updated_date,
-                    z_creation_date=l9GroupOfBuilding.z_creation_date,
+                    z_last_updated_date=datetime.now(),
+                    z_creation_date=datetime.now(),
                     z_is_migrated=l9GroupOfBuilding.z_is_migrated,
                     z_is_migrated_and_updated=l9GroupOfBuilding.z_is_migrated_and_updated
                 )
@@ -257,8 +264,8 @@ def create_amendment_service(tai, taxType, taxReturnPeriodType, taxYear, taxRetu
                     z_notes=l9IntangibleAsset.z_notes,
                     z_is_deleted=l9IntangibleAsset.z_is_deleted,
                     z_is_manually=l9IntangibleAsset.z_is_manually,
-                    z_last_updated_date=l9IntangibleAsset.z_last_updated_date,
-                    z_creation_date=l9IntangibleAsset.z_creation_date,
+                    z_last_updated_date=datetime.now(),
+                    z_creation_date=datetime.now(),
                     z_is_migrated=l9IntangibleAsset.z_is_migrated,
                     z_is_migrated_and_updated=l9IntangibleAsset.z_is_migrated_and_updated
                 )
