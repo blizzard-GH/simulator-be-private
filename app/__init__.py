@@ -19,7 +19,7 @@ from app.routes.l9_intangible_asset_routes import l9_intangible_asset_bp
 from app.routes.l9_group_of_building_routes import l9_group_of_building_bp
 from app.routes.auth_routes import auth_bp
 from app.routes.app_user_routes import app_user_bp
-from app.routes.amendment_routes import amendment_bp
+from app.routes.returnsheet_routes import returnsheet_bp
 
 def create_app():
     app = Flask(__name__)
@@ -53,7 +53,7 @@ def create_app():
     app.register_blueprint(l9_group_of_building_bp)
     app.register_blueprint(auth_bp)  # 🔐 JWT login
     app.register_blueprint(app_user_bp)
-    app.register_blueprint(amendment_bp)
+    app.register_blueprint(returnsheet_bp)
     with app.app_context():
         db.create_all()
 
