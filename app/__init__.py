@@ -20,6 +20,7 @@ from app.routes.l9_group_of_building_routes import l9_group_of_building_bp
 from app.routes.auth_routes import auth_bp
 from app.routes.app_user_routes import app_user_bp
 from app.routes.returnsheet_routes import returnsheet_bp
+from elasticapm.contrib.flask import ElasticAPM   # 👈 import APM
 
 def create_app():
     app = Flask(__name__)
@@ -56,5 +57,22 @@ def create_app():
     app.register_blueprint(returnsheet_bp)
     with app.app_context():
         db.create_all()
+
+    # --- Elastic APM init ---
+    if getattr(Config, "ELASTIC_APM_ENABLED", False):
+        app.config['ELASTIC_APM'] = {
+            'SERVICE_NAME': 'python-backend',
+            'SERVER_URL': Config.ELASTIC_APM_SERVER_URL,
+            # 'SERVER_URL': getattr(Config, "ELASTIC_APM_SERVER_URL", "http://apm-server:8200"),
+            'SECRET_TOKEN': Config.ELASTIC_APM_SECRET_TOKEN,  # if you enable auth in apm-server
+            # 'SECRET_TOKEN': getattr(Config, "ELASTIC_APM_SECRET_TOKEN", ""),  # if you enable auth in apm-server
+            'ENVIRONMENT': getattr(Config, "ENV", "development"),
+            # 'ENVIRONMENT': getattr(Config, "ENV", "development"),
+            'ENVIRONMENT': Config.ENV,
+            'CAPTURE_HEADERS': True,
+            'TRANSACTION_SAMPLE_RATE': Config.ELASTIC_APM_SAMPLE_RATE,  # 👈 here
+        }
+        global apm
+        apm = ElasticAPM(app)
 
     return app

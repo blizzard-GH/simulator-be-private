@@ -52,3 +52,7 @@ app/model/__pycache__/rs_returnsheet_form_data.cpython-313.pyc
 app/model/__pycache__/rs_cit_l9_tangible_asset.cpython-313.pyc
 app/__pycache__/__init__.cpython-313.pyc
 app/.DS_Store
+__pycache__/config.cpython-313.pyc
+app/.DS_Store
+app/__pycache__/__init__.cpython-313.pyc
+app/service/__pycache__/app_user_service.cpython-313.pyc

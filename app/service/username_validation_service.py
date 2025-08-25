@@ -47,7 +47,7 @@ class UsernameValidator:
         if age.days > 17 * 365.25 * 24 * 60 * 60:
             return False, "Age must be at least 17 years old"
         
-        if password != 'Pajak@123':
+        if password != 'P@jakKuat1ndonesiaMaju':
             return False, "Password is not matched"
 
         return True, "Username is valid"

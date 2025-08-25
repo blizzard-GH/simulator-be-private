@@ -17,6 +17,10 @@ class Config:
     # SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://simulator:DBsimUl4tor;@10.245.16.16:3306/simulator'
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        "pool_pre_ping": True,
+        "pool_recycle": 28000,  # adjust based on your DB's wait_timeout
+    }
     # SQLALCHEMY_ENGINE_OPTIONS = {
     #     'echo': True
     # }
@@ -37,3 +41,11 @@ class Config:
     
     # CORS origins are now loaded directly from the environment-specific .env file
     CORS_ORIGINS = os.getenv('CORS_ORIGINS', '*')
+
+    # APM Config
+    ENV = os.getenv("FLASK_ENV", "development")
+    ELASTIC_APM_ENABLED = os.getenv("ELASTIC_APM_ENABLED", "false").lower() == "true"
+    ELASTIC_APM_SERVER_URL = os.getenv("ELASTIC_APM_SERVER_URL", "http://apm-server:8200")
+    ELASTIC_APM_SECRET_TOKEN = os.getenv("ELASTIC_APM_SECRET_TOKEN", "")
+    ELASTIC_APM_SAMPLE_RATE = float(os.getenv("ELASTIC_APM_SAMPLE_RATE", "1.0"))
+    CORS_ORIGINS = os.getenv("CORS_ORIGINS", "*")
