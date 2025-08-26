@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import get_jwt, jwt_required
 
+from app.service import returnsheet_grid_service
 from app.service.returnsheet_service import amendment_returnsheet_service, save_returnsheet_service
 
 returnsheet_bp = Blueprint("returnsheetBlueprint", __name__, url_prefix="/api/returnsheet")
@@ -43,7 +44,21 @@ def save_returnsheet_routes():
 def submit_returnsheet_routes():
     claims = get_jwt()
     tai = claims.get('z_taxpayer_aggregate_identifier')
-    status = "SUBMIT"
+    status = "SUBMITTED"
+    data = request.get_json()
+
+    try:
+        result = save_returnsheet_service(data, status)
+        return jsonify(result), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+    
+@returnsheet_bp.route("/waitingforpayment", methods=["POST"])
+@jwt_required()
+def waiting_for_payment_returnsheet_routes():
+    claims = get_jwt()
+    tai = claims.get('z_taxpayer_aggregate_identifier')
+    status = "WAITINGFORPAYMENT"
     data = request.get_json()
 
     try:
