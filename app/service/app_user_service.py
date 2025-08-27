@@ -27,8 +27,8 @@ def create_app_user_service(tin):
     personalUser = APPUSER(
         TIN=tin,
         NAME="NAMA" + tin[6:],
-        password="P@jakKuat1ndonesiaMaju",
-        passphrase="P@jakKuat1ndonesiaMaju",
+        password="P@jakTumbuh1ndonesiaT@ngguh",
+        passphrase="P@jakTumbuh1ndonesiaT@ngguh",
         IS_CORPORATE=0,
         # TIN_PERSONAL=null,
         # CREATION_DATE=datetime.now(),
@@ -39,8 +39,8 @@ def create_app_user_service(tin):
     corporateUser = APPUSER(
         TIN="0" + tin[1:],
         NAME="BADAN" + tin[6:],
-        password="P@jakKuat1ndonesiaMaju",
-        passphrase="P@jakKuat1ndonesiaMaju",
+        password="P@jakTumbuh1ndonesiaT@ngguh",
+        passphrase="P@jakTumbuh1ndonesiaT@ngguh",
         IS_CORPORATE=1,
         TIN_PERSONAL=tin,
         # CREATION_DATE=datetime.now(),

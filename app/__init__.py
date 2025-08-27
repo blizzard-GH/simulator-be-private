@@ -5,6 +5,8 @@ from flask_sqlalchemy import SQLAlchemy
 from config import Config
 from flask_cors import CORS
 from .extensions import jwt, cors
+from elasticapm.contrib.flask import ElasticAPM
+
 
 
 db = SQLAlchemy()
@@ -32,7 +34,10 @@ def create_app():
     if isinstance(origins, str):
         origins = [o.strip() for o in origins.split(',')]
 
-    CORS(app, origins=origins, supports_credentials=True)
+    CORS(
+        app, 
+        origins=origins, 
+        supports_credentials=True)
     # cors.init_app(app, supports_credentials=True, origins=["http://127.0.0.1:4200"])
     # cors.init_app(app,
     #           supports_credentials=True,
@@ -71,6 +76,7 @@ def create_app():
             'ENVIRONMENT': Config.ENV,
             'CAPTURE_HEADERS': True,
             'TRANSACTION_SAMPLE_RATE': Config.ELASTIC_APM_SAMPLE_RATE,  # 👈 here
+            'CAPTURE_BODY': 'all'
         }
         global apm
         apm = ElasticAPM(app)
