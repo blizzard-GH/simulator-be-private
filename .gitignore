@@ -62,3 +62,4 @@ app/service/__pycache__/app_user_service.cpython-313.pyc
 app/service/__pycache__/username_validation_service.cpython-313.pyc
 app/service/__pycache__/app_user_service.cpython-313.pyc
 app/service/__pycache__/username_validation_service.cpython-313.pyc
+app/__pycache__/__init__.cpython-313.pyc

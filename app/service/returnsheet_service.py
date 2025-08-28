@@ -150,7 +150,7 @@ def amendment_returnsheet_service(tai, taxType, taxReturnPeriodType, taxYear, ta
 
         db.session.add(returnsheet_form_data_new)
 
-        if last_spt["l3_other_parties"]:
+        if last_spt.get("l3_other_parties"):
             # Create L3 Other Parties
             for l3OtherParty in last_spt["l3_other_parties"]:
                 l3OtherPartyNew = RSCITL3OtherParties(
@@ -163,7 +163,7 @@ def amendment_returnsheet_service(tai, taxType, taxReturnPeriodType, taxYear, ta
                     z_income_tax=l3OtherParty.z_income_tax,
                     z_income_tax_usd=l3OtherParty.z_income_tax_usd,
                     z_withholding_slips_decimal=l3OtherParty.z_withholding_slips_decimal,
-                    z_withholding_slips_date=parse_date(l3OtherParty.z_withholding_slips_date),  # datetime.now(),
+                    z_withholding_slips_date=l3OtherParty.z_withholding_slips_date,  # datetime.now(),
                     z_is_deleted=l3OtherParty.z_is_deleted,
                     z_is_manually=l3OtherParty.z_is_manually,
                     z_withholdingslips_aggregate_identifier=l3OtherParty.z_withholdingslips_aggregate_identifier,
@@ -175,7 +175,7 @@ def amendment_returnsheet_service(tai, taxType, taxReturnPeriodType, taxYear, ta
                 )
                 db.session.add(l3OtherPartyNew)
 
-        if last_spt["l4_income_subject_to_finals"]:
+        if last_spt.get("l4_income_subject_to_finals"):
             # Create L4 Income Subject To Final
             for l4IncomeSubjectToFinal in last_spt["l4_income_subject_to_finals"]:
                 l4IncomeSubjectToFinalNew = RSCITL4IncomeSubjectToFinal(
@@ -201,7 +201,7 @@ def amendment_returnsheet_service(tai, taxType, taxReturnPeriodType, taxYear, ta
                 )
                 db.session.add(l4IncomeSubjectToFinalNew)
 
-        if last_spt["l9_tangible_assets"]:
+        if last_spt.get("l9_tangible_assets"):
             # Create L9 Tangible Asset
             for l9TangibleAsset in last_spt["l9_tangible_assets"]:
                 l9TangibleAssetNew = RSCITL9TangibleAsset(
@@ -225,7 +225,7 @@ def amendment_returnsheet_service(tai, taxType, taxReturnPeriodType, taxYear, ta
                 )
                 db.session.add(l9TangibleAssetNew)
 
-        if last_spt["l9_group_of_buildings"]:
+        if last_spt.get("l9_group_of_buildings"):
             # Create L9 Group of Building
             for l9GroupOfBuilding in last_spt["l9_group_of_buildings"]:
                 l9GroupOfBuildingNew = RSCITL9GroupOfBuilding(
@@ -249,7 +249,7 @@ def amendment_returnsheet_service(tai, taxType, taxReturnPeriodType, taxYear, ta
                 )
                 db.session.add(l9GroupOfBuildingNew)
 
-        if last_spt["l9_intangible_assets"]:
+        if last_spt.get("l9_intangible_assets"):
             # Create L9 Intangible Asset
             for l9IntangibleAsset in last_spt["l9_intangible_assets"]:
                 l9IntangibleAssetNew = RSCITL9IntangibleAsset(
@@ -407,95 +407,95 @@ def save_returnsheet_service(data, status):
         if data.get("mainForm"):
             # rs_form_data.set_main_form_value("TaxYear", data.get("mainForm").get("TaxYear")) # TaxYear
             # rs_form_data.set_main_form_value("Status", data.get("mainForm").get("Status")) # Status
-            # rs_form_data.set_main_form_value("AccountingPeriodStart", data.get("mainForm").get("AccountingPeriodStart")) # Status
-            # rs_form_data.set_main_form_value("AccountingPeriodEnd", data.get("mainForm").get("AccountingPeriodEnd")) # Status
-            rs_form_data.set_main_form_value("AccountingMethod", data.get("mainForm").get("AccountingMethod")) # Status
-            # rs_form_data.set_main_form_value("Tin", data.get("mainForm").get("Tin")) # Status
-            # rs_form_data.set_main_form_value("Name", data.get("mainForm").get("Name")) # Status
-            # rs_form_data.set_main_form_value("EmailAddress", data.get("mainForm").get("EmailAddress")) # Status
-            # rs_form_data.set_main_form_value("PhoneNumber", data.get("mainForm").get("PhoneNumber")) # Status
-            rs_form_data.set_main_form_value("BusinessClassification", data.get("mainForm").get("BusinessClassification")) # Status
-            rs_form_data.set_main_form_value("AuditedFinancialStatements", data.get("mainForm").get("AuditedFinancialStatements")) # Status
-            rs_form_data.set_main_form_value("AuditorOpinion", data.get("mainForm").get("AuditorOpinion")) # Status
-            rs_form_data.set_main_form_value("TinAccountant", data.get("mainForm").get("TinAccountant")) # Status
-            rs_form_data.set_main_form_value("NameAccountant", data.get("mainForm").get("NameAccountant")) # Status
-            rs_form_data.set_main_form_value("IsIncomeUnder", data.get("mainForm").get("IsIncomeUnder")) # Status
-            rs_form_data.set_main_form_value("IsIncomeSolely", data.get("mainForm").get("IsIncomeSolely")) # Status
-            rs_form_data.set_main_form_value("IsIncomeSubject", data.get("mainForm").get("IsIncomeSubject")) # Status
-            rs_form_data.set_main_form_value("TotalIncomeSubject", data.get("mainForm").get("TotalIncomeSubject")) # Status
-            rs_form_data.set_main_form_value("IsIncomeExcluded", data.get("mainForm").get("IsIncomeExcluded")) # Status
-            rs_form_data.set_main_form_value("TotalIncomeExcluded", data.get("mainForm").get("TotalIncomeExcluded")) # Status
-            rs_form_data.set_main_form_value("NetIncomeBeforeTax", data.get("mainForm").get("NetIncomeBeforeTax")) # Status
-            rs_form_data.set_main_form_value("IsNetIncomeReduction", data.get("mainForm").get("IsNetIncomeReduction")) # Status
-            rs_form_data.set_main_form_value("TotalNetIncomeReduction", data.get("mainForm").get("TotalNetIncomeReduction")) # Status
-            rs_form_data.set_main_form_value("IsGrossIncomeVocational", data.get("mainForm").get("IsGrossIncomeVocational")) # Status
-            rs_form_data.set_main_form_value("TotalGrossIncomeVocational", data.get("mainForm").get("TotalGrossIncomeVocational")) # Status
-            rs_form_data.set_main_form_value("FiscalNetIncomeAfterTax", data.get("mainForm").get("FiscalNetIncomeAfterTax")) # Status
-            rs_form_data.set_main_form_value("IsCarriedForward", data.get("mainForm").get("IsCarriedForward")) # Status
-            rs_form_data.set_main_form_value("TotalCarriedForward", data.get("mainForm").get("TotalCarriedForward")) # Status
-            rs_form_data.set_main_form_value("TaxableIncome", data.get("mainForm").get("TaxableIncome")) # Status
-            rs_form_data.set_main_form_value("IsGrossIncomeResearch", data.get("mainForm").get("IsGrossIncomeResearch")) # Status
-            rs_form_data.set_main_form_value("TotalGrossIncomeResearch", data.get("mainForm").get("TotalGrossIncomeResearch")) # Status
-            rs_form_data.set_main_form_value("TaxRate", data.get("mainForm").get("TaxRate")) # Status
-            rs_form_data.set_main_form_value("IncomeTaxInAYear", data.get("mainForm").get("IncomeTaxInAYear")) # Status
-            rs_form_data.set_main_form_value("IsIncomeTaxOverseas", data.get("mainForm").get("IsIncomeTaxOverseas")) # Status
-            rs_form_data.set_main_form_value("TotalIncomeTaxOverseas", data.get("mainForm").get("TotalIncomeTaxOverseas")) # Status
-            rs_form_data.set_main_form_value("InstallmentOfIncome", data.get("mainForm").get("InstallmentOfIncome")) # Status
-            rs_form_data.set_main_form_value("NoticeOfCollection", data.get("mainForm").get("NoticeOfCollection")) # Status
-            rs_form_data.set_main_form_value("IsIncomeTaxDeduction", data.get("mainForm").get("IsIncomeTaxDeduction")) # Status
-            rs_form_data.set_main_form_value("TotalIncomeTaxDeduction", data.get("mainForm").get("TotalIncomeTaxDeduction")) # Status
-            rs_form_data.set_main_form_value("UnderpaymentIncomeTax", data.get("mainForm").get("UnderpaymentIncomeTax")) # Status
-            rs_form_data.set_main_form_value("IsApprovalInstallment", data.get("mainForm").get("IsApprovalInstallment")) # Status
-            rs_form_data.set_main_form_value("TotalApprovalInstallment", data.get("mainForm").get("TotalApprovalInstallment")) # Status
-            rs_form_data.set_main_form_value("IncomeTaxMustPaid", data.get("mainForm").get("IncomeTaxMustPaid")) # Status
-            rs_form_data.set_main_form_value("UnderpaymentIncomeInAmended", data.get("mainForm").get("UnderpaymentIncomeInAmended")) # Status
-            rs_form_data.set_main_form_value("UnderpaymentIncomeDueAmended", data.get("mainForm").get("UnderpaymentIncomeDueAmended")) # Status
-            rs_form_data.set_main_form_value("OverpaymentIncomeTax", data.get("mainForm").get("OverpaymentIncomeTax")) # Status
-            rs_form_data.set_main_form_value("BankAccount", data.get("mainForm").get("BankAccount")) # Status
-            rs_form_data.set_main_form_value("AccountNumber", data.get("mainForm").get("AccountNumber")) # Status
-            rs_form_data.set_main_form_value("BankCode", data.get("mainForm").get("BankCode")) # Status
-            rs_form_data.set_main_form_value("BankName", data.get("mainForm").get("BankName")) # Status
-            rs_form_data.set_main_form_value("AccountHolderName", data.get("mainForm").get("AccountHolderName")) # Status
-            rs_form_data.set_main_form_value("IsCriteriaObligatedSubmit", data.get("mainForm").get("IsCriteriaObligatedSubmit")) # Status
-            rs_form_data.set_main_form_value("TotalCriteriaObligatedSubmit", data.get("mainForm").get("TotalCriteriaObligatedSubmit")) # Status
-            rs_form_data.set_main_form_value("IsTransactionWithRelated", data.get("mainForm").get("IsTransactionWithRelated")) # Status
-            rs_form_data.set_main_form_value("IsObligationTransferPricing", data.get("mainForm").get("IsObligationTransferPricing")) # Status
-            rs_form_data.set_main_form_value("IsCapitalInvestmentAffilated", data.get("mainForm").get("IsCapitalInvestmentAffilated")) # Status
-            rs_form_data.set_main_form_value("IsDebtFromShareholders", data.get("mainForm").get("IsDebtFromShareholders")) # Status
-            rs_form_data.set_main_form_value("IsDeclareFiscalDepreciation", data.get("mainForm").get("IsDeclareFiscalDepreciation")) # Status
-            rs_form_data.set_main_form_value("IsDeclareEntertainmentExpense", data.get("mainForm").get("IsDeclareEntertainmentExpense")) # Status
-            rs_form_data.set_main_form_value("IsInvestmentOtherIncome", data.get("mainForm").get("IsInvestmentOtherIncome")) # Status
-            rs_form_data.set_main_form_value("IsRemainingExcess", data.get("mainForm").get("IsRemainingExcess")) # Status
-            rs_form_data.set_main_form_value("IsReceiveDividendIncome", data.get("mainForm").get("IsReceiveDividendIncome")) # Status
-            rs_form_data.set_main_form_value("ExcessOfFinalIncome", data.get("mainForm").get("ExcessOfFinalIncome")) # Status
-            rs_form_data.set_main_form_value("CheckboxDeclaration", data.get("mainForm").get("CheckboxDeclaration")) # Status
-            rs_form_data.set_main_form_value("SignBy", data.get("mainForm").get("SignBy")) # Status
-            rs_form_data.set_main_form_value("SignerTin", data.get("mainForm").get("SignerTin")) # Status
-            rs_form_data.set_main_form_value("SignerName", data.get("mainForm").get("SignerName")) # Status
-            rs_form_data.set_main_form_value("SignerPosition", data.get("mainForm").get("SignerPosition")) # Status
-            rs_form_data.set_main_form_value("AskForReplacement", data.get("mainForm").get("AskForReplacement")) # Status
-            rs_form_data.set_main_form_value("AuditOpinionPdf", data.get("mainForm").get("AuditOpinionPdf")) # Status
-            rs_form_data.set_main_form_value("CalculationAfterTaxPdf", data.get("mainForm").get("CalculationAfterTaxPdf")) # Status
-            rs_form_data.set_main_form_value("CalculationCreditedIncomePdf", data.get("mainForm").get("CalculationCreditedIncomePdf")) # Status
-            rs_form_data.set_main_form_value("ConsolidatedFinancialPdf", data.get("mainForm").get("ConsolidatedFinancialPdf")) # Status
-            rs_form_data.set_main_form_value("DateOfSubmit", data.get("mainForm").get("DateOfSubmit")) # Status
-            rs_form_data.set_main_form_value("ElectronicReceiptPdf", data.get("mainForm").get("ElectronicReceiptPdf")) # Status
-            rs_form_data.set_main_form_value("FinancialForeignPdf", data.get("mainForm").get("FinancialForeignPdf")) # Status
-            rs_form_data.set_main_form_value("FinancialStatementPdf", data.get("mainForm").get("FinancialStatementPdf")) # Status
-            rs_form_data.set_main_form_value("FinancialStatementXls", data.get("mainForm").get("FinancialStatementXls")) # Status
-            rs_form_data.set_main_form_value("IncomeTaxForeignPdf", data.get("mainForm").get("IncomeTaxForeignPdf")) # Status
-            rs_form_data.set_main_form_value("IsIncomeTaxOverseasWithholding", data.get("mainForm").get("IsIncomeTaxOverseasWithholding")) # Status
-            rs_form_data.set_main_form_value("IsReceiveDividendIncomeNumber", data.get("mainForm").get("IsReceiveDividendIncomeNumber")) # Status
-            rs_form_data.set_main_form_value("IsUnderPSCGrossSplitScheme", data.get("mainForm").get("IsUnderPSCGrossSplitScheme")) # Status
-            rs_form_data.set_main_form_value("MonthlyReportPdf", data.get("mainForm").get("MonthlyReportPdf")) # Status
-            rs_form_data.set_main_form_value("OrderDocumentsPdf", data.get("mainForm").get("OrderDocumentsPdf")) # Status
-            rs_form_data.set_main_form_value("PercentageOfTaxRate", data.get("mainForm").get("PercentageOfTaxRate")) # Status
-            rs_form_data.set_main_form_value("ProofOfIncomePdf", data.get("mainForm").get("ProofOfIncomePdf")) # Status
-            rs_form_data.set_main_form_value("ProofOfReinvestmentPdf", data.get("mainForm").get("ProofOfReinvestmentPdf")) # Status
-            rs_form_data.set_main_form_value("ProofOfZakatPdf", data.get("mainForm").get("ProofOfZakatPdf")) # Status
-            rs_form_data.set_main_form_value("ReplacementPrevious", data.get("mainForm").get("ReplacementPrevious")) # Status
-            rs_form_data.set_main_form_value("ReportOfShareholderPdf", data.get("mainForm").get("ReportOfShareholderPdf")) # Status
-            rs_form_data.set_main_form_value("WithholdingSlipPdf", data.get("mainForm").get("WithholdingSlipPdf")) # Status
+            # rs_form_data.set_main_form_value("AccountingPeriodStart", data.get("mainForm").get("AccountingPeriodStart")) # AccountingPeriodStart
+            # rs_form_data.set_main_form_value("AccountingPeriodEnd", data.get("mainForm").get("AccountingPeriodEnd")) # AccountingPeriodEnd
+            rs_form_data.set_main_form_value("AccountingMethod", data.get("mainForm").get("AccountingMethod")) # AccountingMethod
+            # rs_form_data.set_main_form_value("Tin", data.get("mainForm").get("Tin")) # Tin
+            # rs_form_data.set_main_form_value("Name", data.get("mainForm").get("Name")) # Name
+            # rs_form_data.set_main_form_value("EmailAddress", data.get("mainForm").get("EmailAddress")) # EmailAddress
+            # rs_form_data.set_main_form_value("PhoneNumber", data.get("mainForm").get("PhoneNumber")) # PhoneNumber
+            rs_form_data.set_main_form_value("BusinessClassification", data.get("mainForm").get("BusinessClassification")) # BusinessClassification
+            rs_form_data.set_main_form_value("AuditedFinancialStatements", data.get("mainForm").get("AuditedFinancialStatements")) # AuditedFinancialStatements
+            rs_form_data.set_main_form_value("AuditorOpinion", data.get("mainForm").get("AuditorOpinion")) # AuditorOpinion
+            rs_form_data.set_main_form_value("TinAccountant", data.get("mainForm").get("TinAccountant")) # TinAccountant
+            rs_form_data.set_main_form_value("NameAccountant", data.get("mainForm").get("NameAccountant")) # NameAccountant
+            rs_form_data.set_main_form_value("IsIncomeUnder", data.get("mainForm").get("IsIncomeUnder")) # IsIncomeUnder
+            rs_form_data.set_main_form_value("IsIncomeSolely", data.get("mainForm").get("IsIncomeSolely")) # IsIncomeSolely
+            rs_form_data.set_main_form_value("IsIncomeSubject", data.get("mainForm").get("IsIncomeSubject")) # IsIncomeSubject
+            rs_form_data.set_main_form_value("TotalIncomeSubject", data.get("mainForm").get("TotalIncomeSubject")) # TotalIncomeSubject
+            rs_form_data.set_main_form_value("IsIncomeExcluded", data.get("mainForm").get("IsIncomeExcluded")) # IsIncomeExcluded
+            rs_form_data.set_main_form_value("TotalIncomeExcluded", data.get("mainForm").get("TotalIncomeExcluded")) # TotalIncomeExcluded
+            rs_form_data.set_main_form_value("NetIncomeBeforeTax", data.get("mainForm").get("NetIncomeBeforeTax")) # NetIncomeBeforeTax
+            rs_form_data.set_main_form_value("IsNetIncomeReduction", data.get("mainForm").get("IsNetIncomeReduction")) # IsNetIncomeReduction
+            rs_form_data.set_main_form_value("TotalNetIncomeReduction", data.get("mainForm").get("TotalNetIncomeReduction")) # TotalNetIncomeReduction
+            rs_form_data.set_main_form_value("IsGrossIncomeVocational", data.get("mainForm").get("IsGrossIncomeVocational")) # IsGrossIncomeVocational
+            rs_form_data.set_main_form_value("TotalGrossIncomeVocational", data.get("mainForm").get("TotalGrossIncomeVocational")) # TotalGrossIncomeVocational
+            rs_form_data.set_main_form_value("FiscalNetIncomeAfterTax", data.get("mainForm").get("FiscalNetIncomeAfterTax")) # FiscalNetIncomeAfterTax
+            rs_form_data.set_main_form_value("IsCarriedForward", data.get("mainForm").get("IsCarriedForward")) # IsCarriedForward
+            rs_form_data.set_main_form_value("TotalCarriedForward", data.get("mainForm").get("TotalCarriedForward")) # TotalCarriedForward
+            rs_form_data.set_main_form_value("TaxableIncome", data.get("mainForm").get("TaxableIncome")) # TaxableIncome
+            rs_form_data.set_main_form_value("IsGrossIncomeResearch", data.get("mainForm").get("IsGrossIncomeResearch")) # IsGrossIncomeResearch
+            rs_form_data.set_main_form_value("TotalGrossIncomeResearch", data.get("mainForm").get("TotalGrossIncomeResearch")) # TotalGrossIncomeResearch
+            rs_form_data.set_main_form_value("TaxRate", data.get("mainForm").get("TaxRate")) # TaxRate
+            rs_form_data.set_main_form_value("IncomeTaxInAYear", data.get("mainForm").get("IncomeTaxInAYear")) # IncomeTaxInAYear
+            rs_form_data.set_main_form_value("IsIncomeTaxOverseas", data.get("mainForm").get("IsIncomeTaxOverseas")) # IsIncomeTaxOverseas
+            rs_form_data.set_main_form_value("TotalIncomeTaxOverseas", data.get("mainForm").get("TotalIncomeTaxOverseas")) # TotalIncomeTaxOverseas
+            rs_form_data.set_main_form_value("InstallmentOfIncome", data.get("mainForm").get("InstallmentOfIncome")) # InstallmentOfIncome
+            rs_form_data.set_main_form_value("NoticeOfCollection", data.get("mainForm").get("NoticeOfCollection")) # NoticeOfCollection
+            rs_form_data.set_main_form_value("IsIncomeTaxDeduction", data.get("mainForm").get("IsIncomeTaxDeduction")) # IsIncomeTaxDeduction
+            rs_form_data.set_main_form_value("TotalIncomeTaxDeduction", data.get("mainForm").get("TotalIncomeTaxDeduction")) # TotalIncomeTaxDeduction
+            rs_form_data.set_main_form_value("UnderpaymentIncomeTax", data.get("mainForm").get("UnderpaymentIncomeTax")) # UnderpaymentIncomeTax
+            rs_form_data.set_main_form_value("IsApprovalInstallment", data.get("mainForm").get("IsApprovalInstallment")) # IsApprovalInstallment
+            rs_form_data.set_main_form_value("TotalApprovalInstallment", data.get("mainForm").get("TotalApprovalInstallment")) # TotalApprovalInstallment
+            rs_form_data.set_main_form_value("IncomeTaxMustPaid", data.get("mainForm").get("IncomeTaxMustPaid")) # IncomeTaxMustPaid
+            rs_form_data.set_main_form_value("UnderpaymentIncomeInAmended", data.get("mainForm").get("UnderpaymentIncomeInAmended")) # UnderpaymentIncomeInAmended
+            rs_form_data.set_main_form_value("UnderpaymentIncomeDueAmended", data.get("mainForm").get("UnderpaymentIncomeDueAmended")) # UnderpaymentIncomeDueAmended
+            rs_form_data.set_main_form_value("OverpaymentIncomeTax", data.get("mainForm").get("OverpaymentIncomeTax")) # OverpaymentIncomeTax
+            rs_form_data.set_main_form_value("BankAccount", data.get("mainForm").get("BankAccount")) # BankAccount
+            rs_form_data.set_main_form_value("AccountNumber", data.get("mainForm").get("AccountNumber")) # AccountNumber
+            rs_form_data.set_main_form_value("BankCode", data.get("mainForm").get("BankCode")) # BankCode
+            rs_form_data.set_main_form_value("BankName", data.get("mainForm").get("BankName")) # BankName
+            rs_form_data.set_main_form_value("AccountHolderName", data.get("mainForm").get("AccountHolderName")) # AccountHolderName
+            rs_form_data.set_main_form_value("IsCriteriaObligatedSubmit", data.get("mainForm").get("IsCriteriaObligatedSubmit")) # IsCriteriaObligatedSubmit
+            rs_form_data.set_main_form_value("TotalCriteriaObligatedSubmit", data.get("mainForm").get("TotalCriteriaObligatedSubmit")) # TotalCriteriaObligatedSubmit
+            rs_form_data.set_main_form_value("IsTransactionWithRelated", data.get("mainForm").get("IsTransactionWithRelated")) # IsTransactionWithRelated
+            rs_form_data.set_main_form_value("IsObligationTransferPricing", data.get("mainForm").get("IsObligationTransferPricing")) # IsObligationTransferPricing
+            rs_form_data.set_main_form_value("IsCapitalInvestmentAffilated", data.get("mainForm").get("IsCapitalInvestmentAffilated")) # IsCapitalInvestmentAffilated
+            rs_form_data.set_main_form_value("IsDebtFromShareholders", data.get("mainForm").get("IsDebtFromShareholders")) # IsDebtFromShareholders
+            rs_form_data.set_main_form_value("IsDeclareFiscalDepreciation", data.get("mainForm").get("IsDeclareFiscalDepreciation")) # IsDeclareFiscalDepreciation
+            rs_form_data.set_main_form_value("IsDeclareEntertainmentExpense", data.get("mainForm").get("IsDeclareEntertainmentExpense")) # IsDeclareEntertainmentExpense
+            rs_form_data.set_main_form_value("IsInvestmentOtherIncome", data.get("mainForm").get("IsInvestmentOtherIncome")) # IsInvestmentOtherIncome
+            rs_form_data.set_main_form_value("IsRemainingExcess", data.get("mainForm").get("IsRemainingExcess")) # IsRemainingExcess
+            rs_form_data.set_main_form_value("IsReceiveDividendIncome", data.get("mainForm").get("IsReceiveDividendIncome")) # IsReceiveDividendIncome
+            rs_form_data.set_main_form_value("ExcessOfFinalIncome", data.get("mainForm").get("ExcessOfFinalIncome")) # ExcessOfFinalIncome
+            rs_form_data.set_main_form_value("CheckboxDeclaration", data.get("mainForm").get("CheckboxDeclaration")) # CheckboxDeclaration
+            rs_form_data.set_main_form_value("SignBy", data.get("mainForm").get("SignBy")) # SignBy
+            rs_form_data.set_main_form_value("SignerTin", data.get("mainForm").get("SignerTin")) # SignerTin
+            rs_form_data.set_main_form_value("SignerName", data.get("mainForm").get("SignerName")) # SignerName
+            rs_form_data.set_main_form_value("SignerPosition", data.get("mainForm").get("SignerPosition")) # SignerPosition
+            rs_form_data.set_main_form_value("AskForReplacement", data.get("mainForm").get("AskForReplacement")) # AskForReplacement
+            rs_form_data.set_main_form_value("AuditOpinionPdf", data.get("mainForm").get("AuditOpinionPdf")) # AuditOpinionPdf
+            rs_form_data.set_main_form_value("CalculationAfterTaxPdf", data.get("mainForm").get("CalculationAfterTaxPdf")) # CalculationAfterTaxPdf
+            rs_form_data.set_main_form_value("CalculationCreditedIncomePdf", data.get("mainForm").get("CalculationCreditedIncomePdf")) # CalculationCreditedIncomePdf
+            rs_form_data.set_main_form_value("ConsolidatedFinancialPdf", data.get("mainForm").get("ConsolidatedFinancialPdf")) # ConsolidatedFinancialPdf
+            rs_form_data.set_main_form_value("DateOfSubmit", data.get("mainForm").get("DateOfSubmit")) # DateOfSubmit
+            rs_form_data.set_main_form_value("ElectronicReceiptPdf", data.get("mainForm").get("ElectronicReceiptPdf")) # ElectronicReceiptPdf
+            rs_form_data.set_main_form_value("FinancialForeignPdf", data.get("mainForm").get("FinancialForeignPdf")) # FinancialForeignPdf
+            rs_form_data.set_main_form_value("FinancialStatementPdf", data.get("mainForm").get("FinancialStatementPdf")) # FinancialStatementPdf
+            rs_form_data.set_main_form_value("FinancialStatementXls", data.get("mainForm").get("FinancialStatementXls")) # FinancialStatementXls
+            rs_form_data.set_main_form_value("IncomeTaxForeignPdf", data.get("mainForm").get("IncomeTaxForeignPdf")) # IncomeTaxForeignPdf
+            rs_form_data.set_main_form_value("IsIncomeTaxOverseasWithholding", data.get("mainForm").get("IsIncomeTaxOverseasWithholding")) # IsIncomeTaxOverseasWithholding
+            rs_form_data.set_main_form_value("IsReceiveDividendIncomeNumber", data.get("mainForm").get("IsReceiveDividendIncomeNumber")) # IsReceiveDividendIncomeNumber
+            rs_form_data.set_main_form_value("IsUnderPSCGrossSplitScheme", data.get("mainForm").get("IsUnderPSCGrossSplitScheme")) # IsUnderPSCGrossSplitScheme
+            rs_form_data.set_main_form_value("MonthlyReportPdf", data.get("mainForm").get("MonthlyReportPdf")) # MonthlyReportPdf
+            rs_form_data.set_main_form_value("OrderDocumentsPdf", data.get("mainForm").get("OrderDocumentsPdf")) # OrderDocumentsPdf
+            rs_form_data.set_main_form_value("PercentageOfTaxRate", data.get("mainForm").get("PercentageOfTaxRate")) # PercentageOfTaxRate
+            rs_form_data.set_main_form_value("ProofOfIncomePdf", data.get("mainForm").get("ProofOfIncomePdf")) # ProofOfIncomePdf
+            rs_form_data.set_main_form_value("ProofOfReinvestmentPdf", data.get("mainForm").get("ProofOfReinvestmentPdf")) # ProofOfReinvestmentPdf
+            rs_form_data.set_main_form_value("ProofOfZakatPdf", data.get("mainForm").get("ProofOfZakatPdf")) # ProofOfZakatPdf
+            rs_form_data.set_main_form_value("ReplacementPrevious", data.get("mainForm").get("ReplacementPrevious")) # ReplacementPrevious
+            rs_form_data.set_main_form_value("ReportOfShareholderPdf", data.get("mainForm").get("ReportOfShareholderPdf")) # ReportOfShareholderPdf
+            rs_form_data.set_main_form_value("WithholdingSlipPdf", data.get("mainForm").get("WithholdingSlipPdf")) # WithholdingSlipPdf
 
         # ---------- set Financial Statement ----------
         if data.get("FinancialStatement"):
