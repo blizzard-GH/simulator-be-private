@@ -301,19 +301,28 @@ def save_returnsheet_service(data, status):
         rs_form_data.set_main_form_value("SignerPosition", data.get("mainForm").get("SignerPosition"))
 
         # ---------- set L1cTreeData ----------
-        rs_form_data.set_l1c_form_value("L1cTreeData", data.get("l1cForm").get("l1cGrid1data"))
+        if data.get("l1cForm", {}).get("l1cGrid1data", []):
+            rs_form_data.set_l1c_form_value("L1cTreeData", data.get("l1cForm").get("l1cGrid1data"))
 
         # ---------- set L1cTreeTotalRow ----------
-        rs_form_data.set_l1c_form_value("L1cTreeTotalRow", data.get("l1cForm").get("l1cTreeTotalRow"))
+        if data.get("l1cForm", {}).get("l1cTreeTotalRow", {}):
+            rs_form_data.set_l1c_form_value("L1cTreeTotalRow", data.get("l1cForm").get("l1cTreeTotalRow"))
 
         # ---------- set L1cAssets ----------
-        rs_form_data.set_l1c_form_value("L1cAssets", data.get("l1cForm").get("l1cAssetsForm"))
+        if data.get("l1cForm", {}).get("l1cAssetsForm", {}):
+            rs_form_data.set_l1c_form_value("L1cAssets", data.get("l1cForm").get("l1cAssetsForm"))
         
         # ---------- set L1cLiabilitiesAndEquity ----------
-        rs_form_data.set_l1c_form_value("L1cLiabilitiesAndEquity", data.get("l1cForm").get("l1cLiabilitiesAndEquityForm"))
+        if data.get("l1cForm", {}).get("l1cLiabilitiesAndEquityForm", {}):
+            rs_form_data.set_l1c_form_value("L1cLiabilitiesAndEquity", data.get("l1cForm").get("l1cLiabilitiesAndEquityForm"))
 
         # ---------- set L2 ListOfShareholders ----------
-        if data.get("l2Form").get("ListOfShareholders"):
+        if not isinstance(data, dict):
+            data = {}
+
+        l2_form = data.get("l2Form") or {}
+
+        if l2_form.get("ListOfShareholders", []):
             tes = rs_form_data.get_list_of_ownership_value("ListOfShareholders")
             rs_form_data.set_list_of_ownership_value("ListOfShareholders", data.get("l2Form").get("ListOfShareholders"))
             rs_form_data.set_list_of_ownership_value("TotalPaidInCapital", data.get("l2Form").get("TotalPaidInCapital"))
@@ -321,7 +330,11 @@ def save_returnsheet_service(data, status):
             rs_form_data.set_list_of_ownership_value("TotalDividend", data.get("l2Form").get("TotalDividend"))
 
         # ---------- set L3 IncomeOverseas ----------
-        if data.get("l3Form").get("IncomeOverseas"):
+        if not isinstance(data, dict):
+            data = {}
+
+        l3_form = data.get("l3Form") or {}
+        if l3_form.get("IncomeOverseas", []):
             for IncomeOversea in data.get("l3Form").get("IncomeOverseas"):
                 IncomeOversea["DateOfTransaction"] = parse_payload_date(IncomeOversea["DateOfTransaction"])
             rs_form_data.set_list_income_tax_withheld_by_other_parties_value("IncomeOverseas", data.get("l3Form").get("IncomeOverseas"))
@@ -331,25 +344,36 @@ def save_returnsheet_service(data, status):
             rs_form_data.set_list_income_tax_withheld_by_other_parties_value("OverseasRefundPreviousYear", data.get("l3Form").get("OverseasRefundPreviousYear"))
             rs_form_data.set_list_income_tax_withheld_by_other_parties_value("OverseasTotalCalculatedCurrentYear", data.get("l3Form").get("OverseasTotalCalculatedCurrentYear"))
         
-        rs_form_data.set_list_income_tax_withheld_by_other_parties_value("OtherPartiesTotalTaxBase", data.get("l3Form").get("OtherPartiesTotalTaxBase"))
-        rs_form_data.set_list_income_tax_withheld_by_other_parties_value("OtherPartiesIncomeTaxWithheld", data.get("l3Form").get("OtherPartiesIncomeTaxWithheld"))
-        rs_form_data.set_list_income_tax_withheld_by_other_parties_value("OtherPartiesIncomeTaxWithheldUsd", data.get("l3Form").get("OtherPartiesIncomeTaxWithheldUsd"))
-        rs_form_data.set_list_income_tax_withheld_by_other_parties_value("OtherPartiesOverseasIncomeTax", data.get("l3Form").get("OtherPartiesOverseasIncomeTax"))
-        rs_form_data.set_list_income_tax_withheld_by_other_parties_value("OtherPartiesTotalCredit", data.get("l3Form").get("OtherPartiesTotalCredit"))
-        rs_form_data.set_list_income_tax_withheld_by_other_parties_value("OtherPartiesTotalCreditUsd", data.get("l3Form").get("OtherPartiesTotalCreditUsd"))
+        if data.get("l3Form", {}).get("OtherPartiesTotalTaxBase"):
+            rs_form_data.set_list_income_tax_withheld_by_other_parties_value("OtherPartiesTotalTaxBase", data.get("l3Form").get("OtherPartiesTotalTaxBase"))
+        if data.get("l3Form", {}).get("OtherPartiesIncomeTaxWithheld"):
+            rs_form_data.set_list_income_tax_withheld_by_other_parties_value("OtherPartiesIncomeTaxWithheld", data.get("l3Form").get("OtherPartiesIncomeTaxWithheld"))
+        if data.get("l3Form", {}).get("OtherPartiesIncomeTaxWithheldUsd"):
+            rs_form_data.set_list_income_tax_withheld_by_other_parties_value("OtherPartiesIncomeTaxWithheldUsd", data.get("l3Form").get("OtherPartiesIncomeTaxWithheldUsd"))
+        if data.get("l3Form", {}).get("OtherPartiesOverseasIncomeTax"):
+            rs_form_data.set_list_income_tax_withheld_by_other_parties_value("OtherPartiesOverseasIncomeTax", data.get("l3Form").get("OtherPartiesOverseasIncomeTax"))
+        if data.get("l3Form", {}).get("OtherPartiesTotalCredit"):
+            rs_form_data.set_list_income_tax_withheld_by_other_parties_value("OtherPartiesTotalCredit", data.get("l3Form").get("OtherPartiesTotalCredit"))
+        if data.get("l3Form", {}).get("OtherPartiesTotalCreditUsd"):
+            rs_form_data.set_list_income_tax_withheld_by_other_parties_value("OtherPartiesTotalCreditUsd", data.get("l3Form").get("OtherPartiesTotalCreditUsd"))
 
         # ---------- set L4 ListOfIncomeSubjectToFinalTaxAndNonTaxableObject ----------
-        if data.get("l4Form").get("ListOfIncomeSubjectToFinalTaxAndNonTaxableObject"):
+
+        l4_form = data.get("l4Form") or {}
+
+        if l4_form.get("ListOfIncomeSubjectToFinalTaxAndNonTaxableObject", {}):
             rs_form_data.set_list_of_income_subject_to_final_tax_and_non_taxable_object_value("TotalTaxBase", data.get("l4Form").get("ListOfIncomeSubjectToFinalTaxAndNonTaxableObject").get("TotalTaxBase"))
             rs_form_data.set_list_of_income_subject_to_final_tax_and_non_taxable_object_value("TotalFinalIncomeTaxPayable", data.get("l4Form").get("ListOfIncomeSubjectToFinalTaxAndNonTaxableObject").get("TotalFinalIncomeTaxPayable"))
             rs_form_data.set_list_of_income_subject_to_final_tax_and_non_taxable_object_value("TotalFinalIncomeTaxPayableUsd", data.get("l4Form").get("ListOfIncomeSubjectToFinalTaxAndNonTaxableObject").get("TotalFinalIncomeTaxPayableUsd"))
             rs_form_data.set_list_of_income_subject_to_final_tax_and_non_taxable_object_value("TotalGrossIncome", data.get("l4Form").get("ListOfIncomeSubjectToFinalTaxAndNonTaxableObject").get("TotalGrossIncome"))
 
-        if data.get("l4Form").get("ListOfIncomeSubjectToFinalTaxAndNonTaxableObject").get("ListOfIncomeExcludedFromIncomeTax"):
+        if l4_form.get("ListOfIncomeSubjectToFinalTaxAndNonTaxableObject", {}).get("ListOfIncomeExcludedFromIncomeTax", {}):
+        # if data.get("l4Form", {}).get("ListOfIncomeSubjectToFinalTaxAndNonTaxableObject", {}).get("ListOfIncomeExcludedFromIncomeTax"):
             rs_form_data.set_list_of_income_subject_to_final_tax_and_non_taxable_object_value("ListOfIncomeExcludedFromIncomeTax", data.get("l4Form").get("ListOfIncomeSubjectToFinalTaxAndNonTaxableObject").get("ListOfIncomeExcludedFromIncomeTax"))
 
         # ---------- set L6 FiscalYearIncomeTax ----------
-        if data.get("l6Form"):
+        
+        if data.get("l6Form", {}):
             rs_form_data.set_fiscal_year_income_tax_value("IncomeAsTheBasisOfInstallment", data.get("l6Form").get("IncomeAsTheBasisOfInstallment"))
             rs_form_data.set_fiscal_year_income_tax_value("FiscalLossCompensation", data.get("l6Form").get("FiscalLossCompensation"))
             rs_form_data.set_fiscal_year_income_tax_value("TaxableIncome", data.get("l6Form").get("TaxableIncome"))
@@ -359,7 +383,7 @@ def save_returnsheet_service(data, status):
             rs_form_data.set_fiscal_year_income_tax_value("FollowingFiscalYear", data.get("l6Form").get("FollowingFiscalYear"))
 
         # ---------- set L6 CalculationFacilitiesIncomeTaxRateReduction ----------
-        if data.get("l8Form").get("CalculationFacilitiesIncomeTaxRateReduction"):
+        if data.get("l8Form", {}).get("CalculationFacilitiesIncomeTaxRateReduction", {}):
             rs_form_data.set_calculation_facilities_income_tax_rate_reduction_value("GrossTurnOver", data.get("l8Form").get("CalculationFacilitiesIncomeTaxRateReduction").get("GrossTurnOver"))
             rs_form_data.set_calculation_facilities_income_tax_rate_reduction_value("TaxableIncomeShareOfGrossCirculationGrantedFacility", data.get("l8Form").get("CalculationFacilitiesIncomeTaxRateReduction").get("GrossTurnOver"))
             rs_form_data.set_calculation_facilities_income_tax_rate_reduction_value("TaxableIncomeShareOfGrossCirculationNotGrantedFacility", data.get("l8Form").get("CalculationFacilitiesIncomeTaxRateReduction").get("GrossTurnOver"))
@@ -368,7 +392,10 @@ def save_returnsheet_service(data, status):
             rs_form_data.set_calculation_facilities_income_tax_rate_reduction_value("TotalIncomeTax", data.get("l8Form").get("CalculationFacilitiesIncomeTaxRateReduction").get("GrossTurnOver"))
         
         # ---------- set L9 Form RecapitulationFiscalDepreciationAmortization ----------
-        if data.get("l9Form").get("L9Form").get("RecapitulationFiscalDepreciationAmortization"):
+        l9_form = data.get("l9Form") or {}
+
+        if l9_form.get("L9Form", {}).get("RecapitulationFiscalDepreciationAmortization", {}):
+        # if data.get("l9Form", {}).get("L9Form", {}).get("RecapitulationFiscalDepreciationAmortization", {}):
             rs_form_data.set_l9_form_value("TotalFiscalDepreciationTangible", data.get("l9Form").get("L9Form").get("TotalFiscalDepreciationTangible")) # TotalFiscalDepreciationTangible
             rs_form_data.set_l9_form_value("TotalCommercialDepreciationTangible", data.get("l9Form").get("L9Form").get("TotalCommercialDepreciationTangible")) # TotalCommercialDepreciationTangible
             rs_form_data.set_l9_form_value("DiferencesDepreciationTangible", data.get("l9Form").get("L9Form").get("DiferencesDepreciationTangible")) # DiferencesDepreciationTangible
@@ -389,7 +416,7 @@ def save_returnsheet_service(data, status):
             rs_form_data.set_l9_form_value("TotalTable12", data.get("l9Form").get("L9Form").get("TotalTable12")) # TotalTable12
 
         # ---------- set L11B Form ----------
-        if data.get("l11bForm").get("L11BForm"):
+        if data.get("l11bForm", {}).get("L11BForm", {}):
             rs_form_data.set_l11b_form_value("CommercialNettIncome", data.get("l11bForm").get("L11BForm").get("CommercialNettIncome"))
             rs_form_data.set_l11b_form_value("DepreciationAndAmortizationExpenses", data.get("l11bForm").get("L11BForm").get("DepreciationAndAmortizationExpenses"))
             rs_form_data.set_l11b_form_value("IncomeTaxExpense", data.get("l11bForm").get("L11BForm").get("IncomeTaxExpense"))
@@ -397,10 +424,10 @@ def save_returnsheet_service(data, status):
             rs_form_data.set_l11b_form_value("Ebitda", data.get("l11bForm").get("L11BForm").get("Ebitda"))
             rs_form_data.set_l11b_form_value("Ebitda25", data.get("l11bForm").get("L11BForm").get("Ebitda25"))
 
-        if data.get("l11bForm").get("BorrowingCosts"):
+        if data.get("l11bForm", {}).get("BorrowingCosts"):
             rs_form_data.set_l11b_form_value("BorrowingCosts", data.get("l11bForm").get("BorrowingCosts"))
 
-        if data.get("l11bForm").get("TotalBorrowingCosts"):
+        if data.get("l11bForm", {}).get("TotalBorrowingCosts"):
             rs_form_data.set_l11b_form_value("TotalBorrowingCosts", data.get("l11bForm").get("TotalBorrowingCosts"))
 
         # ---------- set Main Form ----------
@@ -527,52 +554,57 @@ def save_returnsheet_service(data, status):
         ).all()
         l3_existing_ids = {r.z_record_id for r in l3_existing_records}
 
-        for l3_other_party in data.get("l3Form").get("L3OtherParties",[]):
-            z_record_id = l3_other_party.get("z_record_id")
-            
-            # If no record_id in payload → generate new one
-            if not z_record_id:
-                z_record_id = str(uuid.uuid4())
-                l3_other_party["z_record_id"] = z_record_id
+        if not isinstance(data, dict):
+            data = {}
 
-            # c. Find existing record
-            existing = next((r for r in l3_existing_records if r.z_record_id == z_record_id), None)
-            
-            # d. Update existing record
-            if existing:
-                existing.z_taxpayer_name = l3_other_party.get("z_taxpayer_name")
-                existing.z_tin = l3_other_party.get("z_tin")
-                existing.z_tax_type = l3_other_party.get("z_tax_type")
-                existing.z_tax_base = l3_other_party.get("z_tax_base")
-                existing.z_income_tax = l3_other_party.get("z_income_tax")
-                existing.z_income_tax_usd = l3_other_party.get("z_income_tax_usd")
-                existing.z_withholding_slips_decimal = l3_other_party.get("z_withholding_slips_decimal")
-                existing.z_withholding_slips_date = parse_date(l3_other_party.get("z_withholding_slips_date"))
-                existing.z_last_updated_date = datetime.now()
-            
-            # e. Create new record
-            else:
-                new = RSCITL3OtherParties(
-                    z_record_id = z_record_id,
-                    z_return_sheet_record_id = return_sheet_record_id,
-                    z_taxpayer_name = l3_other_party.get("z_taxpayer_name"),
-                    z_tin = l3_other_party.get("z_tin"),
-                    z_tax_type = l3_other_party.get("z_tax_type"),
-                    z_tax_base = l3_other_party.get("z_tax_base"),
-                    z_income_tax = l3_other_party.get("z_income_tax"),
-                    z_income_tax_usd = l3_other_party.get("z_income_tax_usd"),
-                    z_withholding_slips_decimal = l3_other_party.get("z_withholding_slips_decimal"),
-                    z_withholding_slips_date = parse_date(l3_other_party.get("z_withholding_slips_date")),
-                    z_is_deleted = 0,
-                    z_is_manually = 1,
-                    z_withholdingslips_aggregate_identifier = Null,
-                    z_table_source = Null,
-                    z_last_updated_date = datetime.now(),
-                    z_creation_date = datetime.now(),
-                    z_is_migrated = 0,
-                    z_is_migrated_and_updated = 0
-                )
-                db.session.add(new)
+        l3_form = data.get("l3Form") or {}
+        if l3_form.get("L3OtherParties", []):
+            for l3_other_party in data.get("l3Form").get("L3OtherParties",[]):
+                z_record_id = l3_other_party.get("z_record_id")
+                
+                # If no record_id in payload → generate new one
+                if not z_record_id:
+                    z_record_id = str(uuid.uuid4())
+                    l3_other_party["z_record_id"] = z_record_id
+
+                # c. Find existing record
+                existing = next((r for r in l3_existing_records if r.z_record_id == z_record_id), None)
+                
+                # d. Update existing record
+                if existing:
+                    existing.z_taxpayer_name = l3_other_party.get("z_taxpayer_name")
+                    existing.z_tin = l3_other_party.get("z_tin")
+                    existing.z_tax_type = l3_other_party.get("z_tax_type")
+                    existing.z_tax_base = l3_other_party.get("z_tax_base")
+                    existing.z_income_tax = l3_other_party.get("z_income_tax")
+                    existing.z_income_tax_usd = l3_other_party.get("z_income_tax_usd")
+                    existing.z_withholding_slips_decimal = l3_other_party.get("z_withholding_slips_decimal")
+                    existing.z_withholding_slips_date = parse_date(l3_other_party.get("z_withholding_slips_date"))
+                    existing.z_last_updated_date = datetime.now()
+                
+                # e. Create new record
+                else:
+                    new = RSCITL3OtherParties(
+                        z_record_id = z_record_id,
+                        z_return_sheet_record_id = return_sheet_record_id,
+                        z_taxpayer_name = l3_other_party.get("z_taxpayer_name"),
+                        z_tin = l3_other_party.get("z_tin"),
+                        z_tax_type = l3_other_party.get("z_tax_type"),
+                        z_tax_base = l3_other_party.get("z_tax_base"),
+                        z_income_tax = l3_other_party.get("z_income_tax"),
+                        z_income_tax_usd = l3_other_party.get("z_income_tax_usd"),
+                        z_withholding_slips_decimal = l3_other_party.get("z_withholding_slips_decimal"),
+                        z_withholding_slips_date = parse_date(l3_other_party.get("z_withholding_slips_date")),
+                        z_is_deleted = 0,
+                        z_is_manually = 1,
+                        z_withholdingslips_aggregate_identifier = Null,
+                        z_table_source = Null,
+                        z_last_updated_date = datetime.now(),
+                        z_creation_date = datetime.now(),
+                        z_is_migrated = 0,
+                        z_is_migrated_and_updated = 0
+                    )
+                    db.session.add(new)
         
         # f. Handle deletes (records in DB but not in payload)
         to_delete_l3 = [r for r in l3_existing_records if r.z_record_id not in l3_payload_ids]
@@ -582,11 +614,15 @@ def save_returnsheet_service(data, status):
 
         # ------- 4. Save to RS_L4_INCOME_SUBJECT_TO_FINAL -------
         # a. Extract all IDs from payload
-        l4_payload_ids = {
-            item["z_record_id"] 
-            for item in data.get("l4Form", {}).get("L4IncomeSubjectToFinal", [])
-            if item.get("z_record_id")    
-        }
+
+        l4_form = data.get("l4Form") or {}
+
+        if l4_form.get("L4IncomeSubjectToFinal", []):
+            l4_payload_ids = {
+                item["z_record_id"] 
+                for item in data.get("l4Form", {}).get("L4IncomeSubjectToFinal", [])
+                if item.get("z_record_id")    
+            }
 
         # b. Fetch all records currently in DB
         # l4_existing_records = RSCITL4IncomeSubjectToFinal.query.filter_by(z_return_sheet_record_id=return_sheet_record_id, z_is_deleted=0).all()
@@ -596,50 +632,51 @@ def save_returnsheet_service(data, status):
         ).all()
         l4_existing_ids = {r.z_record_id for r in l4_existing_records}
 
-        for l4_income_subject_to_final in data.get("l4Form").get("L4IncomeSubjectToFinal",[]):
-            z_record_id = l4_income_subject_to_final.get("z_record_id")
+        if l4_form.get("L4IncomeSubjectToFinal", []):
+            for l4_income_subject_to_final in data.get("l4Form").get("L4IncomeSubjectToFinal",[]):
+                z_record_id = l4_income_subject_to_final.get("z_record_id")
 
-            # If no record_id in payload → generate new one
-            if not z_record_id:
-                z_record_id = str(uuid.uuid4())
-                l4_income_subject_to_final["z_record_id"] = z_record_id
+                # If no record_id in payload → generate new one
+                if not z_record_id:
+                    z_record_id = str(uuid.uuid4())
+                    l4_income_subject_to_final["z_record_id"] = z_record_id
 
-            # c. Find existing record
-            existing = next((r for r in l4_existing_records if r.z_record_id == z_record_id), None)
-            
-            # d. Update existing record
-            if existing:
-                existing.z_tax_base = l4_income_subject_to_final.get("z_tax_base")
-                existing.z_tax_base_usd = l4_income_subject_to_final.get("z_tax_base_usd")
-                existing.z_tax_rate = l4_income_subject_to_final.get("z_tax_rate")
-                existing.z_income_tax = l4_income_subject_to_final.get("z_income_tax")
-                existing.z_income_tax_usd = l4_income_subject_to_final.get("z_income_tax_usd")
-                existing.z_last_updated_date = datetime.now()
-            
-            # e. Create new record
-            else:
-                new = RSCITL4IncomeSubjectToFinal(
-                    z_record_id = z_record_id,
-                    z_return_sheet_record_id = return_sheet_record_id,
-                    z_tax_object_code = l4_income_subject_to_final.get("z_tax_object_code"),
-                    z_tax_object = l4_income_subject_to_final.get("z_tax_object"),
-                    z_tax_base = l4_income_subject_to_final.get("z_tax_base"),
-                    z_tax_rate = l4_income_subject_to_final.get("z_tax_rate"),
-                    z_income_tax = l4_income_subject_to_final.get("z_income_tax"),
-                    z_income_tax_usd = l4_income_subject_to_final.get("z_income_tax"),
-                    z_is_deleted = int(l4_income_subject_to_final.get("z_is_deleted")),
-                    z_is_manually = int(l4_income_subject_to_final.get("z_is_manually")),
-                    z_withholdingslips_aggregate_identifier = str(uuid.uuid4()),
-                    z_table_source = l4_income_subject_to_final.get("z_table_source"),
-                    z_last_updated_date = datetime.now(),
-                    z_creation_date = datetime.now(),
-                    z_is_migrated = int(l4_income_subject_to_final.get("z_is_migrated")),
-                    z_is_migrated_and_updated = int(l4_income_subject_to_final.get("z_is_migrated_and_updated")),
-                    z_tin = l4_income_subject_to_final.get("z_tin"),
-                    z_name = l4_income_subject_to_final.get("z_name"),
-                    z_tax_base_usd = l4_income_subject_to_final.get("z_tax_base")
-                )
-                db.session.add(new)
+                # c. Find existing record
+                existing = next((r for r in l4_existing_records if r.z_record_id == z_record_id), None)
+                
+                # d. Update existing record
+                if existing:
+                    existing.z_tax_base = l4_income_subject_to_final.get("z_tax_base")
+                    existing.z_tax_base_usd = l4_income_subject_to_final.get("z_tax_base_usd")
+                    existing.z_tax_rate = l4_income_subject_to_final.get("z_tax_rate")
+                    existing.z_income_tax = l4_income_subject_to_final.get("z_income_tax")
+                    existing.z_income_tax_usd = l4_income_subject_to_final.get("z_income_tax_usd")
+                    existing.z_last_updated_date = datetime.now()
+                
+                # e. Create new record
+                else:
+                    new = RSCITL4IncomeSubjectToFinal(
+                        z_record_id = z_record_id,
+                        z_return_sheet_record_id = return_sheet_record_id,
+                        z_tax_object_code = l4_income_subject_to_final.get("z_tax_object_code"),
+                        z_tax_object = l4_income_subject_to_final.get("z_tax_object"),
+                        z_tax_base = l4_income_subject_to_final.get("z_tax_base"),
+                        z_tax_rate = l4_income_subject_to_final.get("z_tax_rate"),
+                        z_income_tax = l4_income_subject_to_final.get("z_income_tax"),
+                        z_income_tax_usd = l4_income_subject_to_final.get("z_income_tax"),
+                        z_is_deleted = int(l4_income_subject_to_final.get("z_is_deleted")),
+                        z_is_manually = int(l4_income_subject_to_final.get("z_is_manually")),
+                        z_withholdingslips_aggregate_identifier = str(uuid.uuid4()),
+                        z_table_source = l4_income_subject_to_final.get("z_table_source"),
+                        z_last_updated_date = datetime.now(),
+                        z_creation_date = datetime.now(),
+                        z_is_migrated = int(l4_income_subject_to_final.get("z_is_migrated")),
+                        z_is_migrated_and_updated = int(l4_income_subject_to_final.get("z_is_migrated_and_updated")),
+                        z_tin = l4_income_subject_to_final.get("z_tin"),
+                        z_name = l4_income_subject_to_final.get("z_name"),
+                        z_tax_base_usd = l4_income_subject_to_final.get("z_tax_base")
+                    )
+                    db.session.add(new)
         
         # f. Handle deletes (records in DB but not in payload)
         to_delete_l4 = [r for r in l4_existing_records if r.z_record_id not in l4_payload_ids]
@@ -649,52 +686,56 @@ def save_returnsheet_service(data, status):
 
         # ------- 5. Save to RS_L9_TANGIBLE_ASSET -------
         # a. Extract all IDs from payload
-        l9_tangible_asset_payload_ids = {item["z_record_id"] for item in data.get("l9Form").get("L9TangibleAsset")}
+        l9_form = data.get("l9Form") or {}
+        if l9_form.get("L9TangibleAsset", []):
+            l9_tangible_asset_payload_ids = {
+                item["z_record_id"] for item in data.get("l9Form").get("L9TangibleAsset")}
 
         # b. Fetch all records currently in DB
         l9_tangible_asset_existing_records = RSCITL9TangibleAsset.query.filter_by(z_return_sheet_record_id=return_sheet_record_id, z_is_deleted=0).all()
         l9_tangible_asset_existing_ids = {l9_tangible_asset_record.z_record_id for l9_tangible_asset_record in l9_tangible_asset_existing_records}
 
-        for l9_tangible_asset in data.get("l9Form").get("L9TangibleAsset"):
-            z_record_id = l9_tangible_asset.get("z_record_id")
+        if l9_form.get("L9TangibleAsset", []):
+            for l9_tangible_asset in data.get("l9Form").get("L9TangibleAsset"):
+                z_record_id = l9_tangible_asset.get("z_record_id")
 
-            # c. Find existing record
-            existing = RSCITL9TangibleAsset.query.filter_by(z_record_id=z_record_id).first()
-            
-            # d. Update existing record
-            if existing:
-                existing.z_group_asset_type = l9_tangible_asset.get("z_group_asset_type")
-                existing.z_month_year_acquisition = parse_date(l9_tangible_asset.get("z_month_year_acquisition"))
-                existing.z_acquisition_price = l9_tangible_asset.get("z_acquisition_price")
-                existing.z_remaining_beginning_value = l9_tangible_asset.get("z_remaining_beginning_value")
-                existing.z_method_commercial = l9_tangible_asset.get("z_method_commercial")
-                existing.z_method_fiscal = l9_tangible_asset.get("z_method_fiscal")
-                existing.z_fiscal_year_value = l9_tangible_asset.get("z_fiscal_year_value")
-                existing.z_notes = l9_tangible_asset.get("z_notes")
-                existing.z_last_updated_date = datetime.now()
-            
-            # e. Create new record
-            else:
-                new = RSCITL9TangibleAsset(
-                    z_record_id = str(uuid.uuid4()),
-                    z_return_sheet_record_id = return_sheet_record_id,
-                    z_group_type = l9_tangible_asset.get("z_group_type"),
-                    z_group_asset_type = l9_tangible_asset.get("z_group_asset_type"),
-                    z_month_year_acquisition = parse_date(l9_tangible_asset.get("z_month_year_acquisition")),
-                    z_acquisition_price = l9_tangible_asset.get("z_acquisition_price"),
-                    z_remaining_beginning_value = l9_tangible_asset.get("z_remaining_beginning_value"),
-                    z_method_commercial = l9_tangible_asset.get("z_method_commercial"),
-                    z_method_fiscal = l9_tangible_asset.get("z_method_fiscal"),
-                    z_fiscal_year_value = l9_tangible_asset.get("z_fiscal_year_value"),
-                    z_notes = l9_tangible_asset.get("z_notes"),
-                    z_is_deleted = l9_tangible_asset.get("z_is_deleted"),
-                    z_is_manually = l9_tangible_asset.get("z_is_manually"),
-                    z_last_updated_date = datetime.now(),
-                    z_creation_date = datetime.now(),
-                    z_is_migrated = l9_tangible_asset.get("z_is_migrated"),
-                    z_is_migrated_and_updated = l9_tangible_asset.get("z_is_migrated_and_updated")
-                )
-                db.session.add(new)
+                # c. Find existing record
+                existing = RSCITL9TangibleAsset.query.filter_by(z_record_id=z_record_id).first()
+                
+                # d. Update existing record
+                if existing:
+                    existing.z_group_asset_type = l9_tangible_asset.get("z_group_asset_type")
+                    existing.z_month_year_acquisition = parse_date(l9_tangible_asset.get("z_month_year_acquisition"))
+                    existing.z_acquisition_price = l9_tangible_asset.get("z_acquisition_price")
+                    existing.z_remaining_beginning_value = l9_tangible_asset.get("z_remaining_beginning_value")
+                    existing.z_method_commercial = l9_tangible_asset.get("z_method_commercial")
+                    existing.z_method_fiscal = l9_tangible_asset.get("z_method_fiscal")
+                    existing.z_fiscal_year_value = l9_tangible_asset.get("z_fiscal_year_value")
+                    existing.z_notes = l9_tangible_asset.get("z_notes")
+                    existing.z_last_updated_date = datetime.now()
+                
+                # e. Create new record
+                else:
+                    new = RSCITL9TangibleAsset(
+                        z_record_id = str(uuid.uuid4()),
+                        z_return_sheet_record_id = return_sheet_record_id,
+                        z_group_type = l9_tangible_asset.get("z_group_type"),
+                        z_group_asset_type = l9_tangible_asset.get("z_group_asset_type"),
+                        z_month_year_acquisition = parse_date(l9_tangible_asset.get("z_month_year_acquisition")),
+                        z_acquisition_price = l9_tangible_asset.get("z_acquisition_price"),
+                        z_remaining_beginning_value = l9_tangible_asset.get("z_remaining_beginning_value"),
+                        z_method_commercial = l9_tangible_asset.get("z_method_commercial"),
+                        z_method_fiscal = l9_tangible_asset.get("z_method_fiscal"),
+                        z_fiscal_year_value = l9_tangible_asset.get("z_fiscal_year_value"),
+                        z_notes = l9_tangible_asset.get("z_notes"),
+                        z_is_deleted = l9_tangible_asset.get("z_is_deleted"),
+                        z_is_manually = l9_tangible_asset.get("z_is_manually"),
+                        z_last_updated_date = datetime.now(),
+                        z_creation_date = datetime.now(),
+                        z_is_migrated = l9_tangible_asset.get("z_is_migrated"),
+                        z_is_migrated_and_updated = l9_tangible_asset.get("z_is_migrated_and_updated")
+                    )
+                    db.session.add(new)
 
         # f. Handle deletes (records in DB but not in payload)
         to_delete_l9_tangible_asset = [r for r in l9_tangible_asset_existing_records if r.z_record_id not in l9_tangible_asset_payload_ids]
@@ -704,52 +745,54 @@ def save_returnsheet_service(data, status):
 
         # ------- 6. Save to RS_L9_GROUP_OF_BUILDING -------
         # a. Extract all IDs from payload
-        l9_group_of_building_payload_ids = {item["z_record_id"] for item in data.get("l9Form").get("L9GroupOfBuilding")}
+        if l9_form.get("L9GroupOfBuilding", []):
+            l9_group_of_building_payload_ids = {item["z_record_id"] for item in data.get("l9Form").get("L9GroupOfBuilding")}
 
         # b. Fetch all records currently in DB
         l9_group_of_building_existing_records = RSCITL9GroupOfBuilding.query.filter_by(z_return_sheet_record_id=return_sheet_record_id, z_is_deleted=0).all()
         l9_group_of_building_existing_ids = {l9_group_of_building_record.z_record_id for l9_group_of_building_record in l9_group_of_building_existing_records}
 
-        for l9_group_of_building in data.get("l9Form").get("L9GroupOfBuilding"):
-            z_record_id = l9_group_of_building.get("z_record_id")
+        if l9_form.get("L9GroupOfBuilding", []):
+            for l9_group_of_building in data.get("l9Form").get("L9GroupOfBuilding"):
+                z_record_id = l9_group_of_building.get("z_record_id")
 
-            # c. Find existing record
-            existing = RSCITL9GroupOfBuilding.query.filter_by(z_record_id=z_record_id).first()
-            
-            # d. Update existing record
-            if existing:
-                existing.z_group_asset_type = l9_group_of_building.get("z_group_asset_type")
-                existing.z_month_year_acquisition = parse_date(l9_group_of_building.get("z_month_year_acquisition"))
-                existing.z_acquisition_price = l9_group_of_building.get("z_acquisition_price")
-                existing.z_remaining_beginning_value = l9_group_of_building.get("z_remaining_beginning_value")
-                existing.z_method_commercial = l9_group_of_building.get("z_method_commercial")
-                existing.z_method_fiscal = l9_group_of_building.get("z_method_fiscal")
-                existing.z_fiscal_year_value = l9_group_of_building.get("z_fiscal_year_value")
-                existing.z_notes = l9_group_of_building.get("z_notes")
-                existing.z_last_updated_date = datetime.now()
-            
-            # e. Create new record
-            else:
-                new = RSCITL9GroupOfBuilding(
-                    z_record_id = str(uuid.uuid4()),
-                    z_return_sheet_record_id = return_sheet_record_id,
-                    z_group_type = l9_group_of_building.get("z_group_type"),
-                    z_group_asset_type = l9_group_of_building.get("z_group_asset_type"),
-                    z_month_year_acquisition = parse_date(l9_group_of_building.get("z_month_year_acquisition")),
-                    z_acquisition_price = l9_group_of_building.get("z_acquisition_price"),
-                    z_remaining_beginning_value = l9_group_of_building.get("z_remaining_beginning_value"),
-                    z_method_commercial = l9_group_of_building.get("z_method_commercial"),
-                    z_method_fiscal = l9_group_of_building.get("z_method_fiscal"),
-                    z_fiscal_year_value = l9_group_of_building.get("z_fiscal_year_value"),
-                    z_notes = l9_group_of_building.get("z_notes"),
-                    z_is_deleted = l9_group_of_building.get("z_is_deleted"),
-                    z_is_manually = l9_group_of_building.get("z_is_manually"),
-                    z_last_updated_date = datetime.now(),
-                    z_creation_date = datetime.now(),
-                    z_is_migrated = l9_group_of_building.get("z_is_migrated"),
-                    z_is_migrated_and_updated = l9_group_of_building.get("z_is_migrated_and_updated"),
-                )
-                db.session.add(new)
+                # c. Find existing record
+                existing = RSCITL9GroupOfBuilding.query.filter_by(z_record_id=z_record_id).first()
+                
+                # d. Update existing record
+                if existing:
+                    existing.z_group_asset_type = l9_group_of_building.get("z_group_asset_type")
+                    existing.z_month_year_acquisition = parse_date(l9_group_of_building.get("z_month_year_acquisition"))
+                    existing.z_acquisition_price = l9_group_of_building.get("z_acquisition_price")
+                    existing.z_remaining_beginning_value = l9_group_of_building.get("z_remaining_beginning_value")
+                    existing.z_method_commercial = l9_group_of_building.get("z_method_commercial")
+                    existing.z_method_fiscal = l9_group_of_building.get("z_method_fiscal")
+                    existing.z_fiscal_year_value = l9_group_of_building.get("z_fiscal_year_value")
+                    existing.z_notes = l9_group_of_building.get("z_notes")
+                    existing.z_last_updated_date = datetime.now()
+                
+                # e. Create new record
+                else:
+                    new = RSCITL9GroupOfBuilding(
+                        z_record_id = str(uuid.uuid4()),
+                        z_return_sheet_record_id = return_sheet_record_id,
+                        z_group_type = l9_group_of_building.get("z_group_type"),
+                        z_group_asset_type = l9_group_of_building.get("z_group_asset_type"),
+                        z_month_year_acquisition = parse_date(l9_group_of_building.get("z_month_year_acquisition")),
+                        z_acquisition_price = l9_group_of_building.get("z_acquisition_price"),
+                        z_remaining_beginning_value = l9_group_of_building.get("z_remaining_beginning_value"),
+                        z_method_commercial = l9_group_of_building.get("z_method_commercial"),
+                        z_method_fiscal = l9_group_of_building.get("z_method_fiscal"),
+                        z_fiscal_year_value = l9_group_of_building.get("z_fiscal_year_value"),
+                        z_notes = l9_group_of_building.get("z_notes"),
+                        z_is_deleted = l9_group_of_building.get("z_is_deleted"),
+                        z_is_manually = l9_group_of_building.get("z_is_manually"),
+                        z_last_updated_date = datetime.now(),
+                        z_creation_date = datetime.now(),
+                        z_is_migrated = l9_group_of_building.get("z_is_migrated"),
+                        z_is_migrated_and_updated = l9_group_of_building.get("z_is_migrated_and_updated"),
+                    )
+                    db.session.add(new)
 
         # f. Handle deletes (records in DB but not in payload)
         to_delete_l9_group_of_building = [r for r in l9_group_of_building_existing_records if r.z_record_id not in l9_group_of_building_payload_ids]
@@ -759,52 +802,54 @@ def save_returnsheet_service(data, status):
 
         # ------- 7. Save to RS_L9_INTANGIBLE_ASSET -------
         # a. Extract all IDs from payload
-        l9_intangible_asset_payload_ids = {item["z_record_id"] for item in data.get("l9Form").get("L9IntangibleAsset")}
+        if l9_form.get("L9IntangibleAsset", []):
+            l9_intangible_asset_payload_ids = {item["z_record_id"] for item in data.get("l9Form").get("L9IntangibleAsset")}
 
         # b. Fetch all records currently in DB
         l9_intangible_asset_existing_records = RSCITL9IntangibleAsset.query.filter_by(z_return_sheet_record_id=return_sheet_record_id, z_is_deleted=0).all()
         l9_intangible_asset_existing_ids = {l9_intangible_asset_record.z_record_id for l9_intangible_asset_record in l9_intangible_asset_existing_records}
 
-        for l9_intangible_asset in data.get("l9Form").get("L9IntangibleAsset"):
-            z_record_id = l9_intangible_asset.get("z_record_id")
+        if l9_form.get("L9IntangibleAsset", []):
+            for l9_intangible_asset in data.get("l9Form").get("L9IntangibleAsset"):
+                z_record_id = l9_intangible_asset.get("z_record_id")
 
-            # c. Find existing record
-            existing = RSCITL9IntangibleAsset.query.filter_by(z_record_id=z_record_id).first()
-            
-            # d. Update existing record
-            if existing:
-                existing.z_group_asset_type = l9_intangible_asset.get("z_group_asset_type")
-                existing.z_month_year_acquisition = parse_date(l9_intangible_asset.get("z_month_year_acquisition"))
-                existing.z_acquisition_price = l9_intangible_asset.get("z_acquisition_price")
-                existing.z_remaining_beginning_value = l9_intangible_asset.get("z_remaining_beginning_value")
-                existing.z_method_commercial = l9_intangible_asset.get("z_method_commercial")
-                existing.z_method_fiscal = l9_intangible_asset.get("z_method_fiscal")
-                existing.z_fiscal_year_value = l9_intangible_asset.get("z_fiscal_year_value")
-                existing.z_notes = l9_intangible_asset.get("z_notes")
-                existing.z_last_updated_date = datetime.now()
-            
-            # e. Create new record
-            else:
-                new = RSCITL9IntangibleAsset(
-                    z_record_id = str(uuid.uuid4()),
-                    z_return_sheet_record_id = return_sheet_record_id,
-                    z_group_type = l9_intangible_asset.get("z_group_type"),
-                    z_group_asset_type = l9_intangible_asset.get("z_group_asset_type"),
-                    z_month_year_acquisition = parse_date(l9_intangible_asset.get("z_month_year_acquisition")),
-                    z_acquisition_price = l9_intangible_asset.get("z_acquisition_price"),
-                    z_remaining_beginning_value = l9_intangible_asset.get("z_remaining_beginning_value"),
-                    z_method_commercial = l9_intangible_asset.get("z_method_commercial"),
-                    z_method_fiscal = l9_intangible_asset.get("z_method_fiscal"),
-                    z_fiscal_year_value = l9_intangible_asset.get("z_fiscal_year_value"),
-                    z_notes = l9_intangible_asset.get("z_notes"),
-                    z_is_deleted = l9_intangible_asset.get("z_is_deleted"),
-                    z_is_manually = l9_intangible_asset.get("z_is_manually"),
-                    z_last_updated_date = datetime.now(),
-                    z_creation_date = datetime.now(),
-                    z_is_migrated = l9_intangible_asset.get("z_is_migrated"),
-                    z_is_migrated_and_updated = l9_intangible_asset.get("z_is_migrated_and_updated")
-                )
-                db.session.add(new)
+                # c. Find existing record
+                existing = RSCITL9IntangibleAsset.query.filter_by(z_record_id=z_record_id).first()
+                
+                # d. Update existing record
+                if existing:
+                    existing.z_group_asset_type = l9_intangible_asset.get("z_group_asset_type")
+                    existing.z_month_year_acquisition = parse_date(l9_intangible_asset.get("z_month_year_acquisition"))
+                    existing.z_acquisition_price = l9_intangible_asset.get("z_acquisition_price")
+                    existing.z_remaining_beginning_value = l9_intangible_asset.get("z_remaining_beginning_value")
+                    existing.z_method_commercial = l9_intangible_asset.get("z_method_commercial")
+                    existing.z_method_fiscal = l9_intangible_asset.get("z_method_fiscal")
+                    existing.z_fiscal_year_value = l9_intangible_asset.get("z_fiscal_year_value")
+                    existing.z_notes = l9_intangible_asset.get("z_notes")
+                    existing.z_last_updated_date = datetime.now()
+                
+                # e. Create new record
+                else:
+                    new = RSCITL9IntangibleAsset(
+                        z_record_id = str(uuid.uuid4()),
+                        z_return_sheet_record_id = return_sheet_record_id,
+                        z_group_type = l9_intangible_asset.get("z_group_type"),
+                        z_group_asset_type = l9_intangible_asset.get("z_group_asset_type"),
+                        z_month_year_acquisition = parse_date(l9_intangible_asset.get("z_month_year_acquisition")),
+                        z_acquisition_price = l9_intangible_asset.get("z_acquisition_price"),
+                        z_remaining_beginning_value = l9_intangible_asset.get("z_remaining_beginning_value"),
+                        z_method_commercial = l9_intangible_asset.get("z_method_commercial"),
+                        z_method_fiscal = l9_intangible_asset.get("z_method_fiscal"),
+                        z_fiscal_year_value = l9_intangible_asset.get("z_fiscal_year_value"),
+                        z_notes = l9_intangible_asset.get("z_notes"),
+                        z_is_deleted = l9_intangible_asset.get("z_is_deleted"),
+                        z_is_manually = l9_intangible_asset.get("z_is_manually"),
+                        z_last_updated_date = datetime.now(),
+                        z_creation_date = datetime.now(),
+                        z_is_migrated = l9_intangible_asset.get("z_is_migrated"),
+                        z_is_migrated_and_updated = l9_intangible_asset.get("z_is_migrated_and_updated")
+                    )
+                    db.session.add(new)
 
         # f. Handle deletes (records in DB but not in payload)
         to_delete_l9_intangible_asset = [r for r in l9_intangible_asset_existing_records if r.z_record_id not in l9_intangible_asset_payload_ids]
