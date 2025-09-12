@@ -65,3 +65,12 @@ app/service/__pycache__/username_validation_service.cpython-313.pyc
 app/__pycache__/__init__.cpython-313.pyc
 __pycache__/config.cpython-313.pyc
 app/__pycache__/__init__.cpython-313.pyc
+app/__pycache__/__init__.cpython-313.pyc
+app/model/__pycache__/py_billing.cpython-313.pyc
+app/routes/__pycache__/py_billing_routes.cpython-313.pyc
+app/routes/__pycache__/billing_routes.cpython-313.pyc
+app/routes/__pycache__/returnsheet_routes.cpython-313.pyc
+app/__pycache__/__init__.cpython-313.pyc
+app/service/__pycache__/billing_service.cpython-313.pyc
+app/service/__pycache__/l3_other_parties_service.cpython-313.pyc
+app/service/__pycache__/py_billing_service.cpython-313.pyc

@@ -1,8 +1,8 @@
-from sqlalchemy import Null, desc
+from sqlalchemy import desc
 from app import db
 from flask import jsonify, json
-from app import db
 from datetime import datetime
+import random
 import uuid
 
 from app.model.form_data import FormData
@@ -290,6 +290,18 @@ def save_returnsheet_service(data, status):
             grid.Z_LAST_UPDATED_DATE = datetime.now()
             grid.Z_RETURN_SHEET_STATUS_CODE = status
 
+        if status == "SUBMITTED":
+            # Count rows in DB
+            row_count = db.session.query(RSReturnsheetGrid).count() + 1  # +1 if you want next number
+
+            # Format row count with leading zeros (5 digits: 00018)
+            row_number = f"{row_count:05d}"
+
+            # Generate random 4-digit number
+            random_num = f"{random.randint(0, 9999):04d}"
+
+            # Build Z_BPS_NO
+            grid.Z_BPS_NO = f"BPS-{row_number}/CT/KPP.{random_num}/2025"
 
         # ------- 2. Save to RS_RETURNSHEET_FORM_DATA -------
         rs_form_data = RSReturnsheetFormData.query.filter_by(z_record_id=return_sheet_record_id).first()
@@ -597,8 +609,8 @@ def save_returnsheet_service(data, status):
                         z_withholding_slips_date = parse_date(l3_other_party.get("z_withholding_slips_date")),
                         z_is_deleted = 0,
                         z_is_manually = 1,
-                        z_withholdingslips_aggregate_identifier = Null,
-                        z_table_source = Null,
+                        z_withholdingslips_aggregate_identifier = None,
+                        z_table_source = None,
                         z_last_updated_date = datetime.now(),
                         z_creation_date = datetime.now(),
                         z_is_migrated = 0,

@@ -3,6 +3,7 @@ from flask_jwt_extended import get_jwt, jwt_required
 
 from app.service import returnsheet_grid_service
 from app.service.returnsheet_service import amendment_returnsheet_service, save_returnsheet_service
+from app.service.billing_service import new_billing_service
 
 returnsheet_bp = Blueprint("returnsheetBlueprint", __name__, url_prefix="/api/returnsheet")
 
@@ -63,6 +64,7 @@ def waiting_for_payment_returnsheet_routes():
 
     try:
         result = save_returnsheet_service(data, status)
+        result2 = new_billing_service(tai, data)
         return jsonify(result), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 400

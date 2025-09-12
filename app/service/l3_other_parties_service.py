@@ -8,7 +8,7 @@ import random
 import uuid
 
 def get_l3_other_parties_by_returnsheet_record_id_service(returnsheet_record_id):
-    l3OtherService = RSCITL3OtherParties.query.filter_by(z_return_sheet_record_id=returnsheet_record_id).all()
+    l3OtherService = RSCITL3OtherParties.query.filter_by(z_return_sheet_record_id=returnsheet_record_id, z_is_deleted=0).all()
 
     if not l3OtherService:
         abort(404, description=f"L3 Other Parties with Returnsheet Record ID {returnsheet_record_id} not found")

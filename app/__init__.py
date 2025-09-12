@@ -7,8 +7,6 @@ from flask_cors import CORS
 from .extensions import jwt, cors
 from elasticapm.contrib.flask import ElasticAPM
 
-
-
 db = SQLAlchemy()
 
 # from app.routes.user_routes import user_test_bp
@@ -22,6 +20,7 @@ from app.routes.l9_group_of_building_routes import l9_group_of_building_bp
 from app.routes.auth_routes import auth_bp
 from app.routes.app_user_routes import app_user_bp
 from app.routes.returnsheet_routes import returnsheet_bp
+from app.routes.billing_routes import billing_bp
 from elasticapm.contrib.flask import ElasticAPM   # 👈 import APM
 
 def create_app():
@@ -60,6 +59,7 @@ def create_app():
     app.register_blueprint(auth_bp)  # 🔐 JWT login
     app.register_blueprint(app_user_bp)
     app.register_blueprint(returnsheet_bp)
+    app.register_blueprint(billing_bp)
     with app.app_context():
         db.create_all()
 
