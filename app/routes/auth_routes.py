@@ -5,13 +5,31 @@ from app.model.app_user import APPUSER
 from app.service.app_user_service import create_app_user_service
 from app.service.token_setter_service import token_setter
 from app.service.username_validation_service import UsernameValidator
+import requests
+import os
 
 auth_bp = Blueprint("authBlueprint", __name__, url_prefix="/api")
+# Ambil dari environment variable / config
+RECAPTCHA_SECRET_KEY = os.getenv("RECAPTCHA_SECRET_KEY", "SECRET_KEY")
 
 @auth_bp.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
     user = APPUSER.query.filter_by(TIN=data['username']).first()
+    recaptcha_token = data.get("recaptcha_token")
+
+    # 1️⃣ Verify reCAPTCHA ke Google
+    verify_url = "https://www.google.com/recaptcha/api/siteverify"
+    payload = {
+        "secret": RECAPTCHA_SECRET_KEY,
+        "response": recaptcha_token
+    }
+    print(os.getenv("VERIFY_SSL", "false").lower() == "true")
+    r = requests.post(verify_url, data=payload, verify=os.getenv("VERIFY_SSL", "false").lower() == "true")
+    result = r.json()
+
+    if not result.get("success") or result.get("score", 0) < 0.5:
+        return jsonify({"msg": "Captcha verification failed"}), 400
 
     if user and user.check_password(data['password']):
         return token_setter(user, user.TIN)
