@@ -27,6 +27,7 @@ def pay_billing_service(tai,z_payment_record_id):
             return jsonify({"error": "Returnsheet Grid not found"}), 404
             
         returnsheetgrid.Z_RETURN_SHEET_STATUS_CODE = "SUBMITTED"
+        returnsheetgrid.Z_RETURN_DATE = datetime.now()
 
         # Count rows in DB
         row_count = db.session.query(RSReturnsheetGrid).count() + 1  # +1 if you want next number

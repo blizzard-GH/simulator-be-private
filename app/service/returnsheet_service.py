@@ -209,7 +209,8 @@ def amendment_returnsheet_service(tai, taxType, taxReturnPeriodType, taxYear, ta
                     z_return_sheet_record_id=returnsheet_grid_new.Z_RECORD_ID,
                     z_group_type=l9TangibleAsset.z_group_type,
                     z_group_asset_type=l9TangibleAsset.z_group_asset_type,
-                    z_month_year_acquisition=parse_date(l9TangibleAsset.z_month_year_acquisition),  # l9TangibleAsset.z_month_year_acquisition,
+                    z_month_year_acquisition=l9TangibleAsset.z_month_year_acquisition,  # l9TangibleAsset.z_month_year_acquisition,
+                    # z_month_year_acquisition=parse_date(l9TangibleAsset.z_month_year_acquisition),  # l9TangibleAsset.z_month_year_acquisition,
                     z_acquisition_price=l9TangibleAsset.z_acquisition_price,
                     z_remaining_beginning_value=l9TangibleAsset.z_remaining_beginning_value,
                     z_method_commercial=l9TangibleAsset.z_method_commercial,
@@ -233,7 +234,8 @@ def amendment_returnsheet_service(tai, taxType, taxReturnPeriodType, taxYear, ta
                     z_return_sheet_record_id=returnsheet_grid_new.Z_RECORD_ID,
                     z_group_type=l9GroupOfBuilding.z_group_type,
                     z_group_asset_type=l9GroupOfBuilding.z_group_asset_type,
-                    z_month_year_acquisition=parse_date(l9GroupOfBuilding.z_month_year_acquisition),  # l9GroupOfBuilding.z_month_year_acquisition,
+                    z_month_year_acquisition=l9GroupOfBuilding.z_month_year_acquisition,  # l9GroupOfBuilding.z_month_year_acquisition,
+                    # z_month_year_acquisition=parse_date(l9GroupOfBuilding.z_month_year_acquisition),  # l9GroupOfBuilding.z_month_year_acquisition,
                     z_acquisition_price=l9GroupOfBuilding.z_acquisition_price,
                     z_remaining_beginning_value=l9GroupOfBuilding.z_remaining_beginning_value,
                     z_method_commercial=l9GroupOfBuilding.z_method_commercial,
@@ -257,7 +259,8 @@ def amendment_returnsheet_service(tai, taxType, taxReturnPeriodType, taxYear, ta
                     z_return_sheet_record_id=returnsheet_grid_new.Z_RECORD_ID,
                     z_group_type=l9IntangibleAsset.z_group_type,
                     z_group_asset_type=l9IntangibleAsset.z_group_asset_type,
-                    z_month_year_acquisition=parse_date(l9IntangibleAsset.z_month_year_acquisition),  # l9IntangibleAsset.z_month_year_acquisition,
+                    z_month_year_acquisition=l9IntangibleAsset.z_month_year_acquisition,  # l9IntangibleAsset.z_month_year_acquisition,
+                    # z_month_year_acquisition=parse_date(l9IntangibleAsset.z_month_year_acquisition),  # l9IntangibleAsset.z_month_year_acquisition,
                     z_acquisition_price=l9IntangibleAsset.z_acquisition_price,
                     z_remaining_beginning_value=l9IntangibleAsset.z_remaining_beginning_value,
                     z_method_commercial=l9IntangibleAsset.z_method_commercial,
@@ -302,6 +305,9 @@ def save_returnsheet_service(data, status):
 
             # Build Z_BPS_NO
             grid.Z_BPS_NO = f"BPS-{row_number}/CT/KPP.{random_num}/2025"
+
+            # Set Z_RETURN_DATE to current date
+            grid.Z_RETURN_DATE = datetime.now()
 
         # ------- 2. Save to RS_RETURNSHEET_FORM_DATA -------
         rs_form_data = RSReturnsheetFormData.query.filter_by(z_record_id=return_sheet_record_id).first()
