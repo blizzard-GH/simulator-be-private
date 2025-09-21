@@ -35,7 +35,7 @@ def get_latest_returnsheet(tai, taxType,taxReturnPeriodType,taxYear,taxReturnMod
     if not form_data:
         return jsonify({"error": "Returnsheet Form Data not found"}), 404
     
-    l3OtherParties = RSCITL3OtherParties.query.filter_by(z_return_sheet_record_id=grid.Z_RECORD_ID).all()
+    l3OtherParties = RSCITL3OtherParties.query.filter_by(z_return_sheet_record_id=grid.Z_RECORD_ID, z_is_deleted=0).all()
     l4IncomeSubjectToFinals = RSCITL4IncomeSubjectToFinal.query.filter_by(z_return_sheet_record_id=grid.Z_RECORD_ID, z_is_deleted=0).all()
     l9TangibleAssets = RSCITL9TangibleAsset.query.filter_by(z_return_sheet_record_id=grid.Z_RECORD_ID, z_is_deleted=0).all()
     l9GroupOfBuildings = RSCITL9GroupOfBuilding.query.filter_by(z_return_sheet_record_id=grid.Z_RECORD_ID, z_is_deleted=0).all()
@@ -438,9 +438,27 @@ def save_returnsheet_service(data, status):
 
         if data.get("l11bForm", {}).get("BorrowingCosts"):
             rs_form_data.set_l11b_form_value("BorrowingCosts", data.get("l11bForm").get("BorrowingCosts"))
+        else:
+            rs_form_data.set_l11b_form_value("BorrowingCosts", [])
 
         if data.get("l11bForm", {}).get("TotalBorrowingCosts"):
             rs_form_data.set_l11b_form_value("TotalBorrowingCosts", data.get("l11bForm").get("TotalBorrowingCosts"))
+
+        if data.get("l11bForm", {}).get("DebtBalanceAverage"):
+            rs_form_data.set_l11b_form_value("DebtBalanceAverage", data.get("l11bForm").get("DebtBalanceAverage"))
+        else:
+            rs_form_data.set_l11b_form_value("DebtBalanceAverage", [])
+
+        if data.get("l11bForm", {}).get("TotalDebtBalanceAverage"):
+            rs_form_data.set_l11b_form_value("TotalDebtBalanceAverage", data.get("l11bForm").get("TotalDebtBalanceAverage"))
+        
+        if data.get("l11bForm", {}).get("EquityBalanceAverage"):
+            rs_form_data.set_l11b_form_value("EquityBalanceAverage", data.get("l11bForm").get("EquityBalanceAverage"))
+        else:
+            rs_form_data.set_l11b_form_value("EquityBalanceAverage", [])
+
+        if data.get("l11bForm", {}).get("TotalEquityBalanceAverage"):
+            rs_form_data.set_l11b_form_value("TotalEquityBalanceAverage", data.get("l11bForm").get("TotalEquityBalanceAverage"))
 
         # ---------- set Main Form ----------
         if data.get("mainForm"):
