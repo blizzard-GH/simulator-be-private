@@ -577,11 +577,15 @@ def save_returnsheet_service(data, status):
 
         # ------- 3. Save to RS_L3_OTHER_PARTIES -------
         # a. Extract all IDs from payload
-        l3_payload_ids = {
-            item["z_record_id"]
-            for item in data.get("l3Form", {}).get("L3OtherParties", [])
-            if item.get("z_record_id")
-        }
+
+        if (data.get("l3Form")!=None):
+            l3_payload_ids = {
+                item["z_record_id"]
+                for item in data.get("l3Form", {}).get("L3OtherParties", [])
+                if item.get("z_record_id")
+            }
+        else:
+            l3_payload_ids = {}
 
         # b. Fetch all records currently in DB
         l3_existing_records = RSCITL3OtherParties.query.filter_by(
@@ -651,14 +655,17 @@ def save_returnsheet_service(data, status):
         # ------- 4. Save to RS_L4_INCOME_SUBJECT_TO_FINAL -------
         # a. Extract all IDs from payload
 
-        l4_form = data.get("l4Form") or {}
 
-        if l4_form.get("L4IncomeSubjectToFinal", []):
+        # if l4_form.get("L4IncomeSubjectToFinal", []):
+        l4_form = data.get("l4Form") or {}
+        if (data.get("L4Form")!=None):
             l4_payload_ids = {
                 item["z_record_id"] 
                 for item in data.get("l4Form", {}).get("L4IncomeSubjectToFinal", [])
                 if item.get("z_record_id")    
             }
+        else:
+            l4_payload_ids = {}
 
         # b. Fetch all records currently in DB
         # l4_existing_records = RSCITL4IncomeSubjectToFinal.query.filter_by(z_return_sheet_record_id=return_sheet_record_id, z_is_deleted=0).all()
@@ -668,6 +675,10 @@ def save_returnsheet_service(data, status):
         ).all()
         l4_existing_ids = {r.z_record_id for r in l4_existing_records}
 
+        if not isinstance(data, dict):
+            data = {}
+
+        l4_form = data.get("l4Form") or {}
         if l4_form.get("L4IncomeSubjectToFinal", []):
             for l4_income_subject_to_final in data.get("l4Form").get("L4IncomeSubjectToFinal",[]):
                 z_record_id = l4_income_subject_to_final.get("z_record_id")
@@ -715,6 +726,7 @@ def save_returnsheet_service(data, status):
                     db.session.add(new)
         
         # f. Handle deletes (records in DB but not in payload)
+        # if l4_form.get("L4IncomeSubjectToFinal", []):
         to_delete_l4 = [r for r in l4_existing_records if r.z_record_id not in l4_payload_ids]
         for record in to_delete_l4:
             record.z_is_deleted = 1
@@ -723,9 +735,15 @@ def save_returnsheet_service(data, status):
         # ------- 5. Save to RS_L9_TANGIBLE_ASSET -------
         # a. Extract all IDs from payload
         l9_form = data.get("l9Form") or {}
-        if l9_form.get("L9TangibleAsset", []):
+
+        if (data.get("l9Form")!=None):
             l9_tangible_asset_payload_ids = {
-                item["z_record_id"] for item in data.get("l9Form").get("L9TangibleAsset")}
+                item["z_record_id"] 
+                for item in data.get("l9Form").get("L9TangibleAsset")
+            }
+        else:
+            l9_tangible_asset_payload_ids = {}
+
 
         # b. Fetch all records currently in DB
         l9_tangible_asset_existing_records = RSCITL9TangibleAsset.query.filter_by(z_return_sheet_record_id=return_sheet_record_id, z_is_deleted=0).all()
@@ -774,15 +792,24 @@ def save_returnsheet_service(data, status):
                     db.session.add(new)
 
         # f. Handle deletes (records in DB but not in payload)
-        to_delete_l9_tangible_asset = [r for r in l9_tangible_asset_existing_records if r.z_record_id not in l9_tangible_asset_payload_ids]
-        for record in to_delete_l9_tangible_asset:
-            record.z_is_deleted = 1
+        if l9_form.get("L9TangibleAsset", []):
+            to_delete_l9_tangible_asset = [r for r in l9_tangible_asset_existing_records if r.z_record_id not in l9_tangible_asset_payload_ids]
+            for record in to_delete_l9_tangible_asset:
+                record.z_is_deleted = 1
 
 
         # ------- 6. Save to RS_L9_GROUP_OF_BUILDING -------
         # a. Extract all IDs from payload
-        if l9_form.get("L9GroupOfBuilding", []):
-            l9_group_of_building_payload_ids = {item["z_record_id"] for item in data.get("l9Form").get("L9GroupOfBuilding")}
+        # if l9_form.get("L9GroupOfBuilding", []):
+        #     l9_group_of_building_payload_ids = {item["z_record_id"] for item in data.get("l9Form").get("L9GroupOfBuilding")}
+
+        if (data.get("l9Form")!=None):
+            l9_group_of_building_payload_ids = {
+                item["z_record_id"] 
+                for item in data.get("l9Form").get("L9GroupOfBuilding")
+            }
+        else:
+            l9_group_of_building_payload_ids = {}
 
         # b. Fetch all records currently in DB
         l9_group_of_building_existing_records = RSCITL9GroupOfBuilding.query.filter_by(z_return_sheet_record_id=return_sheet_record_id, z_is_deleted=0).all()
@@ -838,8 +865,16 @@ def save_returnsheet_service(data, status):
 
         # ------- 7. Save to RS_L9_INTANGIBLE_ASSET -------
         # a. Extract all IDs from payload
-        if l9_form.get("L9IntangibleAsset", []):
-            l9_intangible_asset_payload_ids = {item["z_record_id"] for item in data.get("l9Form").get("L9IntangibleAsset")}
+        # if l9_form.get("L9IntangibleAsset", []):
+        #     l9_intangible_asset_payload_ids = {item["z_record_id"] for item in data.get("l9Form").get("L9IntangibleAsset")}
+
+        if (data.get("l9Form")!=None):
+            l9_intangible_asset_payload_ids = {
+                item["z_record_id"] 
+                for item in data.get("l9Form").get("L9IntangibleAsset")
+            }
+        else:
+            l9_intangible_asset_payload_ids = {}
 
         # b. Fetch all records currently in DB
         l9_intangible_asset_existing_records = RSCITL9IntangibleAsset.query.filter_by(z_return_sheet_record_id=return_sheet_record_id, z_is_deleted=0).all()
