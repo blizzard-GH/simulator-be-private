@@ -1,0 +1,15 @@
+FROM python:3.11-slim
+
+COPY zscaler_root.crt /usr/local/share/ca-certificates/zscaler_root.crt
+
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates openssl && rm -rf /var/lib/apt/lists/*
+
+# force update and show what happens
+RUN update-ca-certificates || true
+
+# Show whether Zscaler cert is in place
+RUN echo "== Checking for Zscaler cert ==" && ls -l /etc/ssl/certs | grep -i zscaler || true
+
+# Show TLS handshake result
+RUN echo "== Testing OpenSSL connection to pypi.org ==" && \
+    openssl s_client -connect pypi.org:443 -CAfile /etc/ssl/certs/ca-certificates.crt </dev/null | head -n 40 || true

@@ -1,16 +1,20 @@
-# FROM python:3.10-slim
-
-# WORKDIR /app
-
-# COPY requirements.txt ./
-# RUN pip install -r requirements.txt
-
-# COPY . .
-
-# CMD [ "python", "./run.py" ]
-
 # Use official Python image
 FROM python:3.11-slim
+
+# ---- Zscaler certificate fix ----
+# Copy Zscaler cert into image
+COPY zscaler_root.crt /usr/local/share/ca-certificates/zscaler_root.crt
+
+# Install cert dependencies & update trust store
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends ca-certificates openssl \
+ && update-ca-certificates || true \
+ && rm -rf /var/lib/apt/lists/*
+
+# Point Python + pip + requests to updated cert bundle
+ENV SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
+ENV REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
+# --------------------------------
 
 # Set environment
 ENV PYTHONDONTWRITEBYTECODE=1

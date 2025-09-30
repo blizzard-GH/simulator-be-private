@@ -74,3 +74,4 @@ app/__pycache__/__init__.cpython-313.pyc
 app/service/__pycache__/billing_service.cpython-313.pyc
 app/service/__pycache__/l3_other_parties_service.cpython-313.pyc
 app/service/__pycache__/py_billing_service.cpython-313.pyc
+zscaler_root.cer
